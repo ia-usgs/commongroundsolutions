@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoShort from "@/assets/logo-short.png";
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -27,7 +27,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between py-3 px-4">
         <a href="#home" className="flex items-center gap-3">
-          <img src={logo} alt="Common Ground Solutions" className="h-12 w-auto" />
+          <img src={logoShort} alt="Common Ground Solutions" className="h-12 w-auto" />
         </a>
 
         {/* Desktop nav */}

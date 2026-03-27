@@ -1,5 +1,4 @@
 import { ChevronDown } from "lucide-react";
-import logo from "@/assets/logo.png";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
@@ -14,11 +13,6 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-background/70" />
 
       <div className="relative z-10 flex flex-col items-center text-center px-4">
-        <img
-          src={logo}
-          alt="Common Ground Solutions"
-          className="w-[400px] md:w-[550px] lg:w-[700px] mb-8 animate-fade-in"
-        />
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
           Common Ground Solutions
         </h1>
