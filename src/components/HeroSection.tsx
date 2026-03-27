@@ -17,7 +17,7 @@ const HeroSection = () => {
         <img
           src={logo}
           alt="Common Ground Solutions"
-          className="w-72 md:w-96 lg:w-[500px] mb-8 animate-fade-in"
+          className="w-[400px] md:w-[550px] lg:w-[700px] mb-8 animate-fade-in"
         />
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
           Common Ground Solutions
