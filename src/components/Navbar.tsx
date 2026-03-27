@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import logoShort from "@/assets/logo-short.png";
 
 const navItems = [
-  { label: "Home", href: "#home" },
+  { label: "Main", href: "#home", active: true },
   { label: "Mission", href: "#mission" },
   { label: "Classes", href: "#classes" },
+  { label: "Certification", href: "#certification" },
   { label: "Contact", href: "#contact" },
+  { label: "Book", href: "#contact" },
 ];
 
 const Navbar = () => {
@@ -22,39 +23,31 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-transparent"
+        scrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-background/80 backdrop-blur-sm"
       }`}
     >
-      <div className="container mx-auto flex items-center justify-between py-3 px-4">
-        <a href="#home" className="flex items-center gap-3">
-          <img src={logoShort} alt="Common Ground Solutions" className="h-12 w-auto" />
-        </a>
-
+      <div className="container mx-auto flex items-center justify-center py-4 px-4">
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <li key={item.label}>
               <a
                 href={item.href}
-                className="font-heading text-sm tracking-widest text-foreground/80 hover:text-primary transition-colors uppercase"
+                className={`font-heading text-sm tracking-widest uppercase transition-colors ${
+                  item.active
+                    ? "text-primary"
+                    : "text-foreground/80 hover:text-primary"
+                }`}
               >
                 {item.label}
               </a>
             </li>
           ))}
-          <li>
-            <a
-              href="#classes"
-              className="font-heading text-sm tracking-widest bg-primary text-primary-foreground px-5 py-2 hover:bg-primary/80 transition-colors uppercase"
-            >
-              Book Now
-            </a>
-          </li>
         </ul>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-foreground"
+          className="md:hidden text-foreground ml-auto"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X size={28} /> : <Menu size={28} />}
@@ -70,21 +63,16 @@ const Navbar = () => {
                 <a
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="font-heading text-lg tracking-widest text-foreground/80 hover:text-primary transition-colors uppercase"
+                  className={`font-heading text-lg tracking-widest uppercase transition-colors ${
+                    item.active
+                      ? "text-primary"
+                      : "text-foreground/80 hover:text-primary"
+                  }`}
                 >
                   {item.label}
                 </a>
               </li>
             ))}
-            <li>
-              <a
-                href="#classes"
-                onClick={() => setMobileOpen(false)}
-                className="font-heading text-lg tracking-widest bg-primary text-primary-foreground px-6 py-2 uppercase"
-              >
-                Book Now
-              </a>
-            </li>
           </ul>
         </div>
       )}
