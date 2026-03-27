@@ -16,11 +16,11 @@ const HeroSection = () => {
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         <img
           src={logo}
-          alt="Common Ground Solution"
+          alt="Common Ground Solutions"
           className="w-48 md:w-64 mb-8 animate-fade-in"
         />
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
-          Common Ground Solution
+          Common Ground Solutions
         </h1>
         <p className="mt-4 text-lg md:text-2xl font-heading tracking-[0.3em] text-primary animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           Discipline • Precision • Readiness
