@@ -1,4 +1,3 @@
-import logoShort from "@/assets/logo-short.png";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
@@ -9,16 +8,15 @@ const HeroSection = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      {/* Lighter overlay to let photo show through */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-background/30" />
 
-      {/* Centered logo */}
-      <div className="relative z-10 flex-1 flex items-center justify-center pt-20">
-        <img
-          src={logoShort}
-          alt="Common Ground Solutions"
-          className="w-40 md:w-56 lg:w-64 animate-fade-in drop-shadow-2xl"
-        />
+      {/* Spacer for navbar */}
+      <div className="pt-20" />
+
+      {/* Content centered */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4">
+        {/* intentionally empty — logo is in navbar */}
       </div>
 
       {/* Bottom tagline */}
