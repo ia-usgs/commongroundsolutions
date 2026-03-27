@@ -1,11 +1,11 @@
-import logo from "@/assets/logo.png";
+import logoShort from "@/assets/logo-short.png";
 
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-border py-12">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="Common Ground Solutions" className="h-10 w-auto" />
+          <img src={logoShort} alt="Common Ground Solutions" className="h-10 w-auto" />
           <span className="font-heading text-sm tracking-wider text-muted-foreground">
             © {new Date().getFullYear()} Common Ground Solutions
           </span>
