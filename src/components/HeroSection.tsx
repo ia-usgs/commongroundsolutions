@@ -1,37 +1,32 @@
-import { ChevronDown } from "lucide-react";
+import logoShort from "@/assets/logo-short.png";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-background/70" />
+      {/* Lighter overlay to let photo show through */}
+      <div className="absolute inset-0 bg-background/30" />
 
-      <div className="relative z-10 flex flex-col items-center text-center px-4">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
-          Common Ground Solutions
-        </h1>
-        <p className="mt-4 text-lg md:text-2xl font-heading tracking-[0.3em] text-primary animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          Discipline • Precision • Readiness
-        </p>
-        <a
-          href="#classes"
-          className="mt-10 font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-all uppercase animate-fade-in-up"
-          style={{ animationDelay: "0.4s" }}
-        >
-          View Courses
-        </a>
+      {/* Centered logo */}
+      <div className="relative z-10 flex-1 flex items-center justify-center pt-20">
+        <img
+          src={logoShort}
+          alt="Common Ground Solutions"
+          className="w-40 md:w-56 lg:w-64 animate-fade-in drop-shadow-2xl"
+        />
       </div>
 
-      {/* Scroll indicator */}
-      <a href="#mission" className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-foreground/50">
-        <ChevronDown size={32} />
-      </a>
+      {/* Bottom tagline */}
+      <div className="relative z-10 pb-16 px-6">
+        <p className="text-2xl md:text-4xl lg:text-5xl font-heading tracking-[0.15em] text-primary animate-fade-in-up">
+          SPEED &nbsp;•&nbsp; ACCURACY &nbsp;•&nbsp; CONSISTENCY
+        </p>
+      </div>
     </section>
   );
 };
