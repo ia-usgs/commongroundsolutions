@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import logoShort from "@/assets/logo-short.png";
 
 const navItems = [
   { label: "Main", href: "#home", active: true },
@@ -26,7 +27,11 @@ const Navbar = () => {
         scrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-background/80 backdrop-blur-sm"
       }`}
     >
-      <div className="container mx-auto flex items-center justify-center py-4 px-4">
+      <div className="container mx-auto flex items-center justify-between py-3 px-4">
+        <a href="#home" className="flex items-center gap-3">
+          <img src={logoShort} alt="Common Ground Solutions" className="h-12 w-auto" />
+        </a>
+
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
@@ -47,7 +52,7 @@ const Navbar = () => {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-foreground ml-auto"
+          className="md:hidden text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X size={28} /> : <Menu size={28} />}
