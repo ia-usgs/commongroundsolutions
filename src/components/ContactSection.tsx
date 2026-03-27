@@ -17,7 +17,7 @@ const ContactSection = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4 text-foreground/80">
                 <Mail className="text-primary shrink-0" size={20} />
-                <span>info@torodefensetraining.com</span>
+                <span>info@commongroundsolution.com</span>
               </div>
               <div className="flex items-center gap-4 text-foreground/80">
                 <Phone className="text-primary shrink-0" size={20} />

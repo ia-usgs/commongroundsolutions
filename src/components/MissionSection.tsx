@@ -26,7 +26,7 @@ const MissionSection = () => {
           Our Mission
         </h2>
         <p className="max-w-3xl mx-auto text-center text-foreground/80 text-lg leading-relaxed mb-16">
-          Toro Defense Training delivers elite firearms instruction designed to build a knowledge-based understanding of core shooting fundamentals. We teach advanced techniques that shooters of all levels can adapt to — both on the square range and under the high stress of a life-threatening situation. Our students leave safer, more efficient, and ready to protect what matters.
+          Common Ground Solution delivers elite firearms instruction designed to build a knowledge-based understanding of core shooting fundamentals. We teach advanced techniques that shooters of all levels can adapt to — both on the square range and under the high stress of a life-threatening situation. Our students leave safer, more efficient, and ready to protect what matters.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8">
