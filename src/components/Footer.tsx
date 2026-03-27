@@ -5,9 +5,9 @@ const Footer = () => {
     <footer className="bg-background border-t border-border py-12">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="Toro Defense Training" className="h-10 w-auto" />
+          <img src={logo} alt="Common Ground Solution" className="h-10 w-auto" />
           <span className="font-heading text-sm tracking-wider text-muted-foreground">
-            © {new Date().getFullYear()} Toro Defense Training
+            © {new Date().getFullYear()} Common Ground Solution
           </span>
         </div>
         <div className="flex gap-6">
