@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
-import classPistol from "@/assets/class-pistol-fundamental.jpg";
+import classPistol from "@/assets/class-pistol.jpg";
+import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 
 const courses = [
   {
-    title: "Pistol Fundamental",
+    title: "Pistol Performance",
     image: classPistol,
     date: "April 25th",
     time: "0730–1330",
@@ -30,6 +31,12 @@ const courses = [
     ],
     rentalNote:
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
+  },
+  {
+    title: "Pistol Fundamental",
+    image: classPistolFundamental,
+    comingSoon: true,
+    description: "Foundational pistol course covering safe handling, marksmanship basics, and shooting fundamentals for new and developing shooters.",
   },
   {
     title: "Scoped Carbine",
