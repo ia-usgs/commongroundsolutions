@@ -26,7 +26,7 @@ const MissionSection = () => {
           Our Mission
         </h2>
         <p className="max-w-3xl mx-auto text-center text-foreground/80 text-lg leading-relaxed mb-16">
-          Common Ground Solutions delivers elite firearms instruction designed to build a knowledge-based understanding of core shooting fundamentals. We teach advanced techniques that shooters of all levels can adapt to — both on the square range and under the high stress of a life-threatening situation. Our students leave safer, more efficient, and ready to protect what matters.
+          For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment. All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8">

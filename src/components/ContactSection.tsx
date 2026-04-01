@@ -17,7 +17,7 @@ const ContactSection = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4 text-foreground/80">
                 <Mail className="text-primary shrink-0" size={20} />
-                <span>info@commongroundsolution.com</span>
+                <span>cgstraininggroup@gmail.com</span>
               </div>
               <div className="flex items-center gap-4 text-foreground/80">
                 <Phone className="text-primary shrink-0" size={20} />
@@ -38,17 +38,15 @@ const ContactSection = () => {
               className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
             />
             <input
+              type="tel"
+              placeholder="Phone Number"
+              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+            />
+            <input
               type="email"
               placeholder="Email Address"
               className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
             />
-            <select className="w-full bg-card border border-border px-4 py-3 text-muted-foreground focus:outline-none focus:border-primary transition-colors">
-              <option>Select a Course</option>
-              <option>Fundamental Pistol</option>
-              <option>Tactical Carbine</option>
-              <option>Defensive Concealed Carry</option>
-              <option>Private Lesson</option>
-            </select>
             <textarea
               rows={4}
               placeholder="Message"
