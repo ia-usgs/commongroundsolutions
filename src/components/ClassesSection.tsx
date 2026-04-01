@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
+import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classRifleFundamental from "@/assets/rifle-fundamental.png";
@@ -9,26 +9,39 @@ const courses = [
   {
     title: "Pistol Performance",
     image: classPistol,
-    date: "April 25th",
+    date: "May 2nd",
     time: "0730–1330",
     price: "$225",
     level: "All Levels",
+    location: "Nuevo, CA",
     comingSoon: false,
     description:
       "For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment.",
     details: [
       "All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.",
       "Each course emphasizes safety, accountability, and real-world application, while delivering clear, step-by-step coaching to build confidence and competence at every level.",
+      "Advanced grip and recoil management",
+      "Accuracy and consistency drills",
+      "Efficient draw and presentation",
+      "Target transitions",
+      "Attack and control",
+      "Speed vs. precision balance",
+      "Performance-based shooting drills / Competition style stages",
+      "This course focuses on developing speed, accuracy, and efficiency under structured drills.",
     ],
     requirements: [
-      "Pistol",
+      "Reliable Pistol",
+      "500 round count",
       "At least two magazines",
       "Holster (no nylon holsters permitted)",
       "Magazine carriers",
+      "OWB (Outside the waistband) or IWB (Inside the waistband) Holster",
+      "Reliable and sturdy EDC (everyday carry) belt",
       "Eye and ear protection",
+      "Appropriate clothing for range (pants, shirt, closed-toe shoes)",
+      "Weapons maintenance & cleaning equipment",
       "Water and snacks",
       "Chair",
-      "Cleaning kit",
     ],
     rentalNote:
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
@@ -120,6 +133,11 @@ const ClassesSection = () => {
                         <span className="bg-secondary text-secondary-foreground px-3 py-1">
                           {course.level}
                         </span>
+                        {course.location && (
+                          <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                            <MapPin size={14} /> {course.location}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
