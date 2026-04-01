@@ -1,6 +1,42 @@
+import { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill out your name, email, and message.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(`Message received! Ticket #${data.ticket} created.`);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        toast.error(data.error || "Failed to send message.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not reach the server. Make sure the backend is running.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 bg-secondary">
       <div className="container mx-auto px-4">
@@ -27,32 +63,48 @@ const ContactSection = () => {
           </div>
 
           {/* Form */}
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Full Name"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              placeholder="Full Name *"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+              disabled={isSubmitting}
             />
             <input
               type="tel"
               placeholder="Phone Number"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+              disabled={isSubmitting}
             />
             <input
               type="email"
-              placeholder="Email Address"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              placeholder="Email Address *"
+              required
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+              disabled={isSubmitting}
             />
             <textarea
               rows={4}
-              placeholder="Message"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+              placeholder="Message *"
+              required
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none disabled:opacity-50"
+              disabled={isSubmitting}
             />
             <button
               type="submit"
-              className="w-full font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
+              disabled={isSubmitting}
+              className="w-full font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50"
             >
-              Send Message
+              {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>

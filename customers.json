@@ -1,0 +1,21 @@
+{
+  "next": 3,
+  "byEmail": {
+    "test@example.com": {
+      "customerNo": 1,
+      "name": "Test User",
+      "email": "test@example.com",
+      "phone": "1234567890",
+      "firstSeen": "2026-04-01T16:52:10.201Z",
+      "lastSeen": "2026-04-01T16:52:10.201Z"
+    },
+    "testemail@example.com": {
+      "customerNo": 2,
+      "name": "Email Test",
+      "email": "testemail@example.com",
+      "phone": "555-555-5555",
+      "firstSeen": "2026-04-01T22:16:22.349Z",
+      "lastSeen": "2026-04-01T22:16:22.349Z"
+    }
+  }
+}

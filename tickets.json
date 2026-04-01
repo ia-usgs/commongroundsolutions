@@ -1,0 +1,19 @@
+{
+  "next": 3,
+  "items": [
+    {
+      "caseNo": 1,
+      "customerNo": 1,
+      "message": "This is a test message",
+      "status": "Open",
+      "date": "2026-04-01T16:52:10.201Z"
+    },
+    {
+      "caseNo": 2,
+      "customerNo": 2,
+      "message": "Testing the new email password setup.",
+      "status": "Open",
+      "date": "2026-04-01T22:16:22.349Z"
+    }
+  ]
+}
