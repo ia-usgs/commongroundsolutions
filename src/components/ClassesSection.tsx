@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
-import classPistol from "@/assets/class-pistol.jpg";
+import classPistol from "@/assets/class-pistol-fundamental.jpg";
+import classCarbine from "@/assets/class-scoped-carbine.jpg";
 
 const courses = [
   {
-    title: "Pistol Performance",
+    title: "Pistol Fundamental",
     image: classPistol,
     date: "April 25th",
     time: "0730–1330",
     price: "$225",
     level: "All Levels",
+    comingSoon: false,
     description:
       "For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment.",
     details: [
@@ -28,6 +30,12 @@ const courses = [
     ],
     rentalNote:
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
+  },
+  {
+    title: "Scoped Carbine",
+    image: classCarbine,
+    comingSoon: true,
+    description: "Advanced scoped carbine course covering precision shooting fundamentals, scope zeroing, and positional shooting techniques.",
   },
 ];
 
@@ -53,8 +61,8 @@ const ClassesSection = () => {
                 className="bg-card border border-border overflow-hidden group hover:border-primary/50 transition-all"
               >
                 <div
-                  className="cursor-pointer"
-                  onClick={() => setExpanded(isExpanded ? null : course.title)}
+                  className={course.comingSoon ? "" : "cursor-pointer"}
+                  onClick={() => !course.comingSoon && setExpanded(isExpanded ? null : course.title)}
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
@@ -63,41 +71,52 @@ const ClassesSection = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
+                    {course.comingSoon && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                        <span className="font-heading text-2xl tracking-widest text-primary uppercase">
+                          Coming Soon
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
-                      {isExpanded ? (
-                        <ChevronUp className="text-primary" size={24} />
-                      ) : (
-                        <ChevronDown className="text-primary" size={24} />
+                      {!course.comingSoon && (
+                        isExpanded ? (
+                          <ChevronUp className="text-primary" size={24} />
+                        ) : (
+                          <ChevronDown className="text-primary" size={24} />
+                        )
                       )}
                     </div>
-                    <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
-                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                        <Calendar size={14} /> {course.date}
-                      </span>
-                      <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
-                        <Clock size={14} /> {course.time}
-                      </span>
-                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                        <DollarSign size={14} /> {course.price}
-                      </span>
-                      <span className="bg-secondary text-secondary-foreground px-3 py-1">
-                        {course.level}
-                      </span>
-                    </div>
+                    {!course.comingSoon && (
+                      <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
+                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                          <Calendar size={14} /> {course.date}
+                        </span>
+                        <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
+                          <Clock size={14} /> {course.time}
+                        </span>
+                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                          <DollarSign size={14} /> {course.price}
+                        </span>
+                        <span className="bg-secondary text-secondary-foreground px-3 py-1">
+                          {course.level}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {isExpanded && (
+                {isExpanded && !course.comingSoon && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
                     <p className="text-foreground/80 leading-relaxed">
                       {course.description}
                     </p>
-                    {course.details.map((detail, i) => (
+                    {course.details?.map((detail, i) => (
                       <p key={i} className="text-foreground/80 leading-relaxed">
                         {detail}
                       </p>
@@ -108,7 +127,7 @@ const ClassesSection = () => {
                         What Students Should Bring to Class
                       </h4>
                       <ul className="space-y-2">
-                        {course.requirements.map((req) => (
+                        {course.requirements?.map((req) => (
                           <li key={req} className="flex items-start gap-2 text-foreground/80">
                             <span className="text-primary mt-1">•</span>
                             {req}
