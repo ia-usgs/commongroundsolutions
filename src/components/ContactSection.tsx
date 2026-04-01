@@ -15,22 +15,17 @@ const ContactSection = () => {
 
     setIsSubmitting(true);
     try {
-      // Sending to Web3Forms Free API layer
-      // Please replace "YOUR_ACCESS_KEY_HERE" with your free key from https://web3forms.com
+      const formBody = new FormData();
+      formBody.append("access_key", "c13f5d4f-ebc9-4707-8d94-c0466561bde8");
+      formBody.append("name", formData.name);
+      formBody.append("email", formData.email);
+      formBody.append("phone", formData.phone);
+      formBody.append("message", formData.message);
+      formBody.append("subject", `New Website Inquiry from ${formData.name}`);
+
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: "c13f5d4f-ebc9-4707-8d94-c0466561bde8",
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          subject: `New Website Inquiry from ${formData.name}`,
-        }),
+        body: formBody,
       });
 
       const data = await response.json();
