@@ -24,7 +24,7 @@ const ContactSection = () => {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "YOUR_ACCESS_KEY_HERE",
+          access_key: "c13f5d4f-ebc9-4707-8d94-c0466561bde8",
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
