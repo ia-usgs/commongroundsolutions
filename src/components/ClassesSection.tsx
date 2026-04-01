@@ -133,6 +133,11 @@ const ClassesSection = () => {
                         <span className="bg-secondary text-secondary-foreground px-3 py-1">
                           {course.level}
                         </span>
+                        {course.location && (
+                          <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                            <MapPin size={14} /> {course.location}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
