@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
+import classRifleFundamental from "@/assets/rifle-fundamental.png";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 
 const courses = [
@@ -37,6 +38,12 @@ const courses = [
     image: classPistolFundamental,
     comingSoon: true,
     description: "Foundational pistol course covering safe handling, marksmanship basics, and shooting fundamentals for new and developing shooters.",
+  },
+  {
+    title: "Rifle Fundamental",
+    image: classRifleFundamental,
+    comingSoon: true,
+    description: "Foundational rifle course covering safe handling, marksmanship basics, and shooting fundamentals for new and developing shooters.",
   },
   {
     title: "Scoped Carbine",

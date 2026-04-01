@@ -20,10 +20,6 @@ const ContactSection = () => {
                 <span>cgstraininggroup@gmail.com</span>
               </div>
               <div className="flex items-center gap-4 text-foreground/80">
-                <Phone className="text-primary shrink-0" size={20} />
-                <span>(555) 123-4567</span>
-              </div>
-              <div className="flex items-center gap-4 text-foreground/80">
                 <MapPin className="text-primary shrink-0" size={20} />
                 <span>Southern California</span>
               </div>

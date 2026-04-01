@@ -1,11 +1,6 @@
-import { Shield, Target, Users } from "lucide-react";
+import { Shield, Users } from "lucide-react";
 
 const features = [
-  {
-    icon: Target,
-    title: "Expert Instruction",
-    description: "Our instructors bring years of military and law enforcement experience to deliver world-class firearms training.",
-  },
   {
     icon: Shield,
     title: "Safety First",
@@ -29,7 +24,7 @@ const MissionSection = () => {
           For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment. All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {features.map((feature) => (
             <div
               key={feature.title}
