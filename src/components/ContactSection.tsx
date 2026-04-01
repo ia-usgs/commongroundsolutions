@@ -15,16 +15,28 @@ const ContactSection = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
+      // Sending to Web3Forms Free API layer
+      // Please replace "YOUR_ACCESS_KEY_HERE" with your free key from https://web3forms.com
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "YOUR_ACCESS_KEY_HERE",
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          subject: `New Website Inquiry from ${formData.name}`,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(`Message received! Ticket #${data.ticket} created.`);
+        toast.success("Message sent! We'll be in touch shortly.");
         setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
         toast.error(data.error || "Failed to send message.");
