@@ -16,8 +16,11 @@ const HeroSection = () => {
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
           Common Ground Solutions
         </h1>
-        <p className="mt-4 text-lg md:text-2xl font-heading tracking-[0.3em] text-primary animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          Discipline • Precision • Readiness
+        <p className="mt-2 text-xl md:text-3xl font-heading tracking-widest text-foreground/90 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
+          Training Academy
+        </p>
+        <p className="mt-4 text-lg md:text-2xl font-heading tracking-[0.3em] text-primary animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+          Critical Thinking • Marksmanship • Readiness
         </p>
         <a
           href="#classes"
