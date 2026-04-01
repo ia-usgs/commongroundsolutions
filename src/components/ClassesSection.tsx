@@ -150,8 +150,13 @@ const ClassesSection = () => {
                     </p>
                     {course.details && (
                       <>
+                        {course.details.slice(0, 2).map((detail, i) => (
+                          <p key={i} className="text-foreground/80 leading-relaxed">
+                            {detail}
+                          </p>
+                        ))}
                         <ul className="space-y-2">
-                          {course.details.slice(0, -1).map((detail, i) => (
+                          {course.details.slice(2, -1).map((detail, i) => (
                             <li key={i} className="flex items-start gap-2 text-foreground/80">
                               <span className="text-primary mt-1">•</span>
                               {detail}
