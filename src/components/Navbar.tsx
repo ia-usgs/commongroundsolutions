@@ -7,8 +7,8 @@ const navItems = [
   { label: "Mission", href: "#mission" },
   { label: "Classes", href: "#classes" },
   { label: "Certification", href: "#certification" },
+  { label: "Social", href: "#social" },
   { label: "Contact", href: "#contact" },
-  { label: "Book", href: "#contact" },
 ];
 
 const Navbar = () => {
