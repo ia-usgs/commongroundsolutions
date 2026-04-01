@@ -148,11 +148,21 @@ const ClassesSection = () => {
                     <p className="text-foreground/80 leading-relaxed">
                       {course.description}
                     </p>
-                    {course.details?.map((detail, i) => (
-                      <p key={i} className="text-foreground/80 leading-relaxed">
-                        {detail}
-                      </p>
-                    ))}
+                    {course.details && (
+                      <>
+                        <ul className="space-y-2">
+                          {course.details.slice(0, -1).map((detail, i) => (
+                            <li key={i} className="flex items-start gap-2 text-foreground/80">
+                              <span className="text-primary mt-1">•</span>
+                              {detail}
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="text-foreground/80 leading-relaxed">
+                          {course.details[course.details.length - 1]}
+                        </p>
+                      </>
+                    )}
 
                     <div>
                       <h4 className="font-heading text-lg font-semibold text-foreground mb-3">
