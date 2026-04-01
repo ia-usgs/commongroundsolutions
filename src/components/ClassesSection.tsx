@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
+import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classRifleFundamental from "@/assets/rifle-fundamental.png";
