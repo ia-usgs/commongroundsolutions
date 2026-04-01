@@ -89,3 +89,8 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(0 80% 50%);
 }
+
+#lovable-badge {                
+  display: none !important;                
+}
+
