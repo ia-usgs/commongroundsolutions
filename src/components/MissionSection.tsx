@@ -20,9 +20,20 @@ const MissionSection = () => {
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-center text-primary mb-6">
           Our Mission
         </h2>
-        <p className="max-w-3xl mx-auto text-center text-foreground/80 text-lg leading-relaxed mb-16">
-          For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment. All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.
-        </p>
+        <div className="max-w-3xl mx-auto text-center text-foreground/80 text-lg leading-relaxed mb-16 space-y-4">
+          <p>
+            At Common Ground Solution our mission is to provide safe, effective, and responsible firearm training for individuals at every level, whether new to shooting or experienced and looking to refine their skills.
+          </p>
+          <p>
+            Our instruction is built on real-world experience and a relentless commitment to mastering the fundamentals. We emphasize safety, accountability, and practical application in a structured, no-nonsense environment designed for everyday civilians.
+          </p>
+          <p>
+            Led by instructors who are both NRA-certified and P.O.S.T.-certified, we uphold a high standard of training grounded in proven methodology and professional discipline.
+          </p>
+          <p>
+            Our goal is simple: to help responsible citizens build confidence, sharpen their abilities, and carry themselves with the awareness and responsibility that firearm ownership demands.
+          </p>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {features.map((feature) => (
