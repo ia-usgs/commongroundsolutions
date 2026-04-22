@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 const ContactSection = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,8 +20,9 @@ const ContactSection = () => {
       formBody.append("name", formData.name);
       formBody.append("email", formData.email);
       formBody.append("phone", formData.phone);
+      formBody.append("course", formData.course || "Not specified");
       formBody.append("message", formData.message);
-      formBody.append("subject", `New Website Inquiry from ${formData.name}`);
+      formBody.append("subject", `New Website Inquiry from ${formData.name}${formData.course ? ` — ${formData.course}` : ""}`);
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -32,7 +33,7 @@ const ContactSection = () => {
 
       if (response.ok) {
         toast.success("Message sent! We'll be in touch shortly.");
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", course: "", message: "" });
       } else {
         toast.error(data.error || "Failed to send message.");
       }
@@ -97,6 +98,20 @@ const ContactSection = () => {
               className="w-full bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             />
+            <select
+              value={formData.course}
+              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+              disabled={isSubmitting}
+            >
+              <option value="">Select a Course (optional)</option>
+              <option value="Pistol Performance">Pistol Performance — May 2nd</option>
+              <option value="Fundamental Pistol Course">Fundamental Pistol Course — May 24th</option>
+              <option value="Rifle Fundamental">Rifle Fundamental (Coming Soon)</option>
+              <option value="Scoped Carbine">Scoped Carbine (Coming Soon)</option>
+              <option value="Private Lesson">Private Lesson</option>
+              <option value="Other">Other / General Inquiry</option>
+            </select>
             <textarea
               rows={4}
               placeholder="Message *"
