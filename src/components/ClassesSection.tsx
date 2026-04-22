@@ -46,7 +46,7 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
-    title: "Fundamental Pistol Course",
+    title: "Baseline Pistol Course",
     image: classPistolFundamental,
     date: "May 24th",
     time: "0730–1330",
@@ -84,7 +84,7 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
-    title: "Rifle Fundamental",
+    title: "Baseline Rifle",
     image: classRifleFundamental,
     comingSoon: true,
     description: "Foundational rifle course covering safe handling, marksmanship basics, and shooting fundamentals for new and developing shooters.",
