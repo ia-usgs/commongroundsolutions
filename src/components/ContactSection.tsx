@@ -22,7 +22,7 @@ const ContactSection = () => {
       formBody.append("phone", formData.phone);
       formBody.append("course", formData.course || "Not specified");
       formBody.append("message", formData.message);
-      formBody.append("subject", `New Website Inquiry from ${formData.name}${formData.course ? ` — ${formData.course}` : ""}`);
+      formBody.append("subject", `New Website Inquiry from ${formData.name}${formData.course ? ` (${formData.course})` : ""}`);
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
