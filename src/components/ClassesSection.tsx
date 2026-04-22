@@ -107,7 +107,7 @@ const ClassesSection = () => {
           Our Courses
         </h2>
         <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
-          Click on a course below to learn more and sign up. Classes are added frequently — check back for updated schedules.
+          Click on a course below to learn more and sign up. Classes are added frequently. Check back for updated schedules.
         </p>
 
         <div className="max-w-3xl mx-auto space-y-8">
