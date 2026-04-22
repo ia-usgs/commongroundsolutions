@@ -57,7 +57,7 @@ const courses = [
     description:
       "Whether you've never touched a firearm or you're looking to sharpen your fundamentals, this course is designed to build real confidence and measurable skill from the ground up.",
     details: [
-      "Many shooters plateau early due to gaps in fundamentals — this course fixes that.",
+      "Many shooters plateau early due to gaps in fundamentals. This course fixes that.",
       "You'll learn:",
       "Proven firearm safety principles you can rely on under stress",
       "How your pistol actually works so you're not just \"using it,\" you understand it",
@@ -65,7 +65,7 @@ const courses = [
       "Safe and efficient loading/unloading procedures",
       "Core marksmanship fundamentals used by experienced shooters",
       "Professional range etiquette and safety standards",
-      "This isn't just a beginner class — it's a foundation course. New shooters leave with confidence and clarity. Experienced shooters leave with tighter groups, better control, and a deeper understanding of their mechanics.",
+      "This isn't just a beginner class. It's a foundation course. New shooters leave with confidence and clarity. Experienced shooters leave with tighter groups, better control, and a deeper understanding of their mechanics.",
     ],
     requirements: [
       "Reliable Pistol",
@@ -107,7 +107,7 @@ const ClassesSection = () => {
           Our Courses
         </h2>
         <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
-          Click on a course below to learn more and sign up. Classes are added frequently — check back for updated schedules.
+          Click on a course below to learn more and sign up. Classes are added frequently. Check back for updated schedules.
         </p>
 
         <div className="max-w-3xl mx-auto space-y-8">

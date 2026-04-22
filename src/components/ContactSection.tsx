@@ -22,7 +22,7 @@ const ContactSection = () => {
       formBody.append("phone", formData.phone);
       formBody.append("course", formData.course || "Not specified");
       formBody.append("message", formData.message);
-      formBody.append("subject", `New Website Inquiry from ${formData.name}${formData.course ? ` — ${formData.course}` : ""}`);
+      formBody.append("subject", `New Website Inquiry from ${formData.name}${formData.course ? ` (${formData.course})` : ""}`);
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -105,8 +105,8 @@ const ContactSection = () => {
               disabled={isSubmitting}
             >
               <option value="">Select a Course (optional)</option>
-              <option value="Pistol Performance">Pistol Performance — May 2nd</option>
-              <option value="Fundamental Pistol Course">Fundamental Pistol Course — May 24th</option>
+              <option value="Pistol Performance">Pistol Performance (May 2nd)</option>
+              <option value="Fundamental Pistol Course">Fundamental Pistol Course (May 24th)</option>
               <option value="Rifle Fundamental">Rifle Fundamental (Coming Soon)</option>
               <option value="Scoped Carbine">Scoped Carbine (Coming Soon)</option>
               <option value="Private Lesson">Private Lesson</option>
