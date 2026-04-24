@@ -50,7 +50,7 @@ const courses = [
     image: classPistolFundamental,
     date: "May 24th",
     time: "0730–1330",
-    price: "$225",
+    price: "$180",
     level: "All Levels",
     location: "Nuevo, CA",
     comingSoon: false,
