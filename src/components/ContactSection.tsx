@@ -107,6 +107,7 @@ const ContactSection = () => {
               <option value="">Select a Course (optional)</option>
               <option value="Pistol Performance">Pistol Performance (May 2nd)</option>
               <option value="Baseline Pistol Course">Baseline Pistol Course (May 24th)</option>
+              <option value="Defensive Dynamic Performance">Defensive Dynamic Performance (TBA)</option>
               <option value="Baseline Rifle">Baseline Rifle (Coming Soon)</option>
               <option value="Scoped Carbine">Scoped Carbine (Coming Soon)</option>
               <option value="CPR / AED / First Aid">CPR / AED / First Aid ($90)</option>
