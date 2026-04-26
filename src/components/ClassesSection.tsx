@@ -88,9 +88,9 @@ const courses = [
     title: "Defensive Dynamic Performance",
     image: classDefensive,
     date: "TBA",
-    time: "TBA",
-    price: "TBA",
-    level: "Advanced",
+    time: "0730–1430",
+    price: "$265",
+    level: "Intermediate",
     location: "Nuevo, CA",
     comingSoon: false,
     description:
