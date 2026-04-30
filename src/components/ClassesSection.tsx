@@ -10,7 +10,10 @@ const courses = [
   {
     title: "Pistol Performance",
     image: classPistol,
-    date: "May 2nd",
+    dates: [
+      { label: "May 2nd", soldOut: true },
+      { label: "May 23rd", soldOut: false },
+    ],
     time: "0730–1330",
     price: "$225",
     level: "All Levels",
