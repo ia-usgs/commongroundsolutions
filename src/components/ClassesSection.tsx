@@ -10,7 +10,10 @@ const courses = [
   {
     title: "Pistol Performance",
     image: classPistol,
-    date: "May 2nd",
+    dates: [
+      { label: "May 2nd", soldOut: true },
+      { label: "May 23rd", soldOut: false },
+    ],
     time: "0730–1330",
     price: "$225",
     level: "All Levels",
@@ -202,9 +205,30 @@ const ClassesSection = () => {
                     </div>
                     {!course.comingSoon && (
                       <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
-                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                          <Calendar size={14} /> {course.date}
-                        </span>
+                        {course.dates ? (
+                          <span
+                            className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Calendar size={14} />
+                            <select
+                              className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
+                              defaultValue={
+                                course.dates.find((d) => !d.soldOut)?.label ?? course.dates[0].label
+                              }
+                            >
+                              {course.dates.map((d) => (
+                                <option key={d.label} value={d.label} disabled={d.soldOut} className="bg-card text-foreground">
+                                  {d.label}{d.soldOut ? " — Sold Out" : ""}
+                                </option>
+                              ))}
+                            </select>
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                            <Calendar size={14} /> {course.date}
+                          </span>
+                        )}
                         <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
                           <Clock size={14} /> {course.time}
                         </span>
