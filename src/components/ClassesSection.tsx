@@ -276,8 +276,8 @@ const ClassesSection = () => {
                 className="bg-card border border-border overflow-hidden group hover:border-primary/50 transition-all"
               >
                 <div
-                  className={comingSoon ? "" : "cursor-pointer"}
-                  onClick={() => !comingSoon && setExpanded(isExpanded ? null : course.courseKey)}
+                  className="cursor-pointer"
+                  onClick={() => setExpanded(isExpanded ? null : course.courseKey)}
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
@@ -299,12 +299,10 @@ const ClassesSection = () => {
                       <h3 className="text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
-                      {!comingSoon && (
-                        isExpanded ? (
-                          <ChevronUp className="text-primary" size={24} />
-                        ) : (
-                          <ChevronDown className="text-primary" size={24} />
-                        )
+                      {isExpanded ? (
+                        <ChevronUp className="text-primary" size={24} />
+                      ) : (
+                        <ChevronDown className="text-primary" size={24} />
                       )}
                     </div>
                     <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
@@ -374,7 +372,7 @@ const ClassesSection = () => {
                   </div>
                 </div>
 
-                {isExpanded && !comingSoon && (
+                {isExpanded && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
                     <p className="text-foreground/80 leading-relaxed">
                       {course.description}
@@ -417,14 +415,24 @@ const ClassesSection = () => {
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => openSignup(course, activeSlug, displayPrice)}
-                      disabled={seatInfo?.full}
-                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {seatInfo?.full ? "Class Full" : "Sign Up Now"}
-                    </button>
+                    {comingSoon ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="inline-block font-heading text-sm tracking-widest bg-secondary text-secondary-foreground px-8 py-3 uppercase opacity-70 cursor-not-allowed"
+                      >
+                        Coming Soon
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => openSignup(course, activeSlug, displayPrice)}
+                        disabled={seatInfo?.full}
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {seatInfo?.full ? "Class Full" : "Sign Up Now"}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
