@@ -415,14 +415,24 @@ const ClassesSection = () => {
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => openSignup(course, activeSlug, displayPrice)}
-                      disabled={seatInfo?.full}
-                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {seatInfo?.full ? "Class Full" : "Sign Up Now"}
-                    </button>
+                    {comingSoon ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="inline-block font-heading text-sm tracking-widest bg-secondary text-secondary-foreground px-8 py-3 uppercase opacity-70 cursor-not-allowed"
+                      >
+                        Coming Soon
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => openSignup(course, activeSlug, displayPrice)}
+                        disabled={seatInfo?.full}
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {seatInfo?.full ? "Class Full" : "Sign Up Now"}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
