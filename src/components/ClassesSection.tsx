@@ -299,12 +299,10 @@ const ClassesSection = () => {
                       <h3 className="text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
-                      {!comingSoon && (
-                        isExpanded ? (
-                          <ChevronUp className="text-primary" size={24} />
-                        ) : (
-                          <ChevronDown className="text-primary" size={24} />
-                        )
+                      {isExpanded ? (
+                        <ChevronUp className="text-primary" size={24} />
+                      ) : (
+                        <ChevronDown className="text-primary" size={24} />
                       )}
                     </div>
                     <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
