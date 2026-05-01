@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin, Users } from "lucide-react";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classRifleFundamental from "@/assets/rifle-fundamental.png";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
 import classDefensive from "@/assets/class-defensive.jpg";
+import SignupModal from "./SignupModal";
+import { useClassesAndSeats } from "@/hooks/useSeatCounts";
 
 const courses = [
   {
