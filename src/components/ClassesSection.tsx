@@ -208,6 +208,34 @@ const courses = [
 
 const ClassesSection = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [selectedSlugs, setSelectedSlugs] = useState<Record<string, string>>({});
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    classId: string | null;
+    className: string;
+    price: string;
+  }>({ open: false, classId: null, className: "", price: "" });
+  const { getRemaining, getClassBySlug } = useClassesAndSeats();
+
+  const resolveSlug = (course: any): string | undefined => {
+    if (course.dates) {
+      return selectedSlugs[course.title] ?? course.dates.find((d: any) => !d.soldOut)?.slug ?? course.dates[0].slug;
+    }
+    return course.slug;
+  };
+
+  const openSignup = (course: any) => {
+    const slug = resolveSlug(course);
+    if (!slug) return;
+    const cls = getClassBySlug(slug);
+    if (!cls) return;
+    setModalState({
+      open: true,
+      classId: cls.id,
+      className: course.title,
+      price: course.price,
+    });
+  };
 
   return (
     <section id="classes" className="py-24 bg-background">
@@ -222,6 +250,8 @@ const ClassesSection = () => {
         <div className="max-w-3xl mx-auto space-y-8">
           {courses.map((course) => {
             const isExpanded = expanded === course.title;
+            const activeSlug = resolveSlug(course);
+            const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
             return (
               <div
                 key={course.title}
