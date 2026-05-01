@@ -21,7 +21,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { LogOut, CheckCircle2, XCircle, Save } from "lucide-react";
+import { LogOut, CheckCircle2, XCircle, Save, CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format, parseISO } from "date-fns";
+import { cn } from "@/lib/utils";
 
 type Signup = {
   id: string;
@@ -212,11 +216,31 @@ const Admin = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label className="text-xs">Date</Label>
-                      <Input
-                        type="date"
-                        value={c.class_date}
-                        onChange={(e) => updateClassField(c.id, "class_date", e.target.value)}
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !c.class_date && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {c.class_date ? format(parseISO(c.class_date), "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 z-50 bg-popover" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={c.class_date ? parseISO(c.class_date) : undefined}
+                            onSelect={(d) =>
+                              d && updateClassField(c.id, "class_date", format(d, "yyyy-MM-dd"))
+                            }
+                            initialFocus
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <div>
                       <Label className="text-xs">Status</Label>
