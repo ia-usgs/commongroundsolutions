@@ -334,6 +334,20 @@ const ClassesSection = () => {
                             <MapPin size={14} /> {course.location}
                           </span>
                         )}
+                        {seatInfo && (
+                          <span
+                            className={`flex items-center gap-1 px-3 py-1 ${
+                              seatInfo.full
+                                ? "bg-destructive/20 text-destructive"
+                                : seatInfo.remaining <= 3
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-secondary text-secondary-foreground"
+                            }`}
+                          >
+                            <Users size={14} />
+                            {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
