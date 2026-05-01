@@ -194,7 +194,7 @@ const courses = [
     slug: "scope-carbine-1-tba",
     time: "0730–1330",
     price: "$350",
-    level: "Intermediate",
+    level: "All Levels",
     location: "Nuevo, CA",
     comingSoon: true,
     description: "Introductory scoped carbine course covering precision shooting fundamentals, scope zeroing, and positional shooting techniques. 6 spots available.",
