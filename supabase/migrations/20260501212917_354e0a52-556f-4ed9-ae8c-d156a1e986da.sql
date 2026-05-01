@@ -1,0 +1,2 @@
+INSERT INTO public.classes (slug, course_key, name, class_date, start_time, end_time, price_cents, capacity, location, status)
+VALUES ('cpr-aed-firstaid-tba', 'cpr-aed-firstaid', 'CPR / AED / First Aid', '2099-12-31', '0900', '1230', 9000, 12, 'Location TBA', 'tba');

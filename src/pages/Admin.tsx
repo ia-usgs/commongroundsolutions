@@ -64,6 +64,7 @@ const COURSE_GROUPS: { key: string; label: string }[] = [
   { key: "baseline-rifle", label: "Baseline Rifle" },
   { key: "scope-carbine-1", label: "Scope Carbine I" },
   { key: "scope-carbine-2", label: "Scope Carbine II" },
+  { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
 ];
 
 const Admin = () => {
