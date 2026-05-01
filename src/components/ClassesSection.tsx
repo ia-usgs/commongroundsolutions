@@ -276,8 +276,8 @@ const ClassesSection = () => {
                 className="bg-card border border-border overflow-hidden group hover:border-primary/50 transition-all"
               >
                 <div
-                  className={comingSoon ? "" : "cursor-pointer"}
-                  onClick={() => !comingSoon && setExpanded(isExpanded ? null : course.courseKey)}
+                  className="cursor-pointer"
+                  onClick={() => setExpanded(isExpanded ? null : course.courseKey)}
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
