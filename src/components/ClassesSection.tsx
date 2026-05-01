@@ -374,7 +374,7 @@ const ClassesSection = () => {
                   </div>
                 </div>
 
-                {isExpanded && !comingSoon && (
+                {isExpanded && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
                     <p className="text-foreground/80 leading-relaxed">
                       {course.description}
