@@ -145,6 +145,7 @@ const courses = [
     title: "Baseline Rifle",
     image: classRifleFundamental,
     date: "TBA",
+    slug: "baseline-rifle-tba",
     time: "0730–1330",
     price: "$225",
     level: "All Levels",
