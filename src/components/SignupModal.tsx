@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-safe";
 import {
   Dialog,
   DialogContent,
