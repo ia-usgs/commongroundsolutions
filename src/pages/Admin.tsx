@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-safe";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -12,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { LogOut, CheckCircle2, XCircle } from "lucide-react";
+import { LogOut, CheckCircle2, XCircle, Save } from "lucide-react";
 
 type Signup = {
   id: string;
@@ -36,7 +45,10 @@ type ClassRow = {
   capacity: number;
   status: string;
   class_date: string;
+  start_time: string | null;
+  end_time: string | null;
   price_cents: number;
+  location: string | null;
 };
 
 const Admin = () => {
@@ -114,6 +126,34 @@ const Admin = () => {
     navigate("/auth", { replace: true });
   };
 
+  const updateClassField = (id: string, field: keyof ClassRow, value: any) => {
+    setClasses((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
+  };
+
+  const saveClass = async (c: ClassRow) => {
+    const priceCents = Number(c.price_cents);
+    const capacity = Number(c.capacity);
+    if (!c.class_date || isNaN(priceCents) || isNaN(capacity) || capacity < 1) {
+      toast.error("Date, price, and capacity (≥1) are required");
+      return;
+    }
+    const { error } = await supabase
+      .from("classes")
+      .update({
+        class_date: c.class_date,
+        start_time: c.start_time,
+        end_time: c.end_time,
+        price_cents: priceCents,
+        capacity,
+        status: c.status,
+        location: c.location,
+      })
+      .eq("id", c.id);
+    if (error) return toast.error(error.message);
+    toast.success(`${c.name} updated`);
+    loadData();
+  };
+
   const classMap = Object.fromEntries(classes.map((c) => [c.id, c]));
   const filtered = signups.filter((s) => filter === "all" || s.status === filter);
 
@@ -139,12 +179,15 @@ const Admin = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-10">
-        {/* Class capacity overview */}
+        {/* Class manager */}
         <section>
           <h2 className="font-heading text-xl tracking-wider text-foreground uppercase mb-4">
-            Class Capacity
+            Manage Classes
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p className="text-xs text-muted-foreground mb-4">
+            Edit dates, times, prices, capacity, and status. Changes go live instantly on the public site. Use date <strong>2099-12-31</strong> + status <strong>TBA</strong> for placeholder/coming-soon classes.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {classes.map((c) => {
               const classSignups = signups.filter(
                 (s) => s.class_id === c.id && (s.status === "pending" || s.status === "confirmed")
@@ -153,16 +196,96 @@ const Admin = () => {
               const pending = classSignups.filter((s) => s.status === "pending").length;
               const remaining = c.capacity - confirmed - pending;
               return (
-                <div key={c.id} className="bg-card border border-border p-4">
-                  <p className="font-heading text-foreground text-lg">{c.name}</p>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    {new Date(c.class_date).toLocaleDateString()} · ${(c.price_cents / 100).toFixed(0)}
-                  </p>
-                  <div className="flex gap-2 text-xs">
-                    <Badge variant="default">{confirmed} paid</Badge>
-                    <Badge variant="secondary">{pending} pending</Badge>
-                    <Badge variant="outline">{remaining} left of {c.capacity}</Badge>
+                <div key={c.id} className="bg-card border border-border p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="font-heading text-foreground text-lg leading-tight">{c.name}</p>
+                      <p className="text-xs text-muted-foreground font-mono">{c.slug}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-1 justify-end">
+                      <Badge variant="default">{confirmed} paid</Badge>
+                      <Badge variant="secondary">{pending} pending</Badge>
+                      <Badge variant="outline">{remaining} left</Badge>
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-xs">Date</Label>
+                      <Input
+                        type="date"
+                        value={c.class_date}
+                        onChange={(e) => updateClassField(c.id, "class_date", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Status</Label>
+                      <Select
+                        value={c.status}
+                        onValueChange={(v) => updateClassField(c.id, "status", v)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="open">Open</SelectItem>
+                          <SelectItem value="sold_out">Sold Out</SelectItem>
+                          <SelectItem value="tba">TBA</SelectItem>
+                          <SelectItem value="closed">Closed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Start time</Label>
+                      <Input
+                        type="text"
+                        placeholder="07:30"
+                        value={c.start_time ?? ""}
+                        onChange={(e) => updateClassField(c.id, "start_time", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">End time</Label>
+                      <Input
+                        type="text"
+                        placeholder="13:30"
+                        value={c.end_time ?? ""}
+                        onChange={(e) => updateClassField(c.id, "end_time", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Price (cents)</Label>
+                      <Input
+                        type="number"
+                        value={c.price_cents}
+                        onChange={(e) => updateClassField(c.id, "price_cents", e.target.value)}
+                      />
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        ${(Number(c.price_cents) / 100).toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Capacity</Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={c.capacity}
+                        onChange={(e) => updateClassField(c.id, "capacity", e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Label className="text-xs">Location</Label>
+                      <Input
+                        type="text"
+                        value={c.location ?? ""}
+                        onChange={(e) => updateClassField(c.id, "location", e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <Button onClick={() => saveClass(c)} className="w-full" size="sm">
+                    <Save size={14} className="mr-2" /> Save changes
+                  </Button>
                 </div>
               );
             })}
