@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { LogOut, CheckCircle2, XCircle, Save, CalendarIcon } from "lucide-react";
+import { LogOut, CheckCircle2, XCircle, Save, CalendarIcon, Plus, Trash2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, parseISO } from "date-fns";
