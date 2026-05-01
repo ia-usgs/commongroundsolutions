@@ -296,67 +296,65 @@ const ClassesSection = () => {
                         )
                       )}
                     </div>
-                    {!course.comingSoon && (
-                      <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
-                        {course.dates ? (
-                          <span
-                            className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1"
-                            onClick={(e) => e.stopPropagation()}
+                    <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
+                      {course.dates ? (
+                        <span
+                          className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Calendar size={14} />
+                          <select
+                            className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
+                            value={
+                              selectedSlugs[course.title] ??
+                              course.dates.find((d: any) => !d.soldOut)?.slug ??
+                              course.dates[0].slug
+                            }
+                            onChange={(e) =>
+                              setSelectedSlugs({ ...selectedSlugs, [course.title]: e.target.value })
+                            }
                           >
-                            <Calendar size={14} />
-                            <select
-                              className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
-                              value={
-                                selectedSlugs[course.title] ??
-                                course.dates.find((d: any) => !d.soldOut)?.slug ??
-                                course.dates[0].slug
-                              }
-                              onChange={(e) =>
-                                setSelectedSlugs({ ...selectedSlugs, [course.title]: e.target.value })
-                              }
-                            >
-                              {course.dates.map((d: any) => (
-                                <option key={d.slug} value={d.slug} disabled={d.soldOut} className="bg-card text-foreground">
-                                  {d.label}{d.soldOut ? " — Sold Out" : ""}
-                                </option>
-                              ))}
-                            </select>
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                            <Calendar size={14} /> {course.date}
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
-                          <Clock size={14} /> {course.time}
+                            {course.dates.map((d: any) => (
+                              <option key={d.slug} value={d.slug} disabled={d.soldOut} className="bg-card text-foreground">
+                                {d.label}{d.soldOut ? " — Sold Out" : ""}
+                              </option>
+                            ))}
+                          </select>
                         </span>
+                      ) : (
                         <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                          <DollarSign size={14} /> {course.price}
+                          <Calendar size={14} /> {course.date}
                         </span>
-                        <span className="bg-secondary text-secondary-foreground px-3 py-1">
-                          {course.level}
+                      )}
+                      <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
+                        <Clock size={14} /> {course.time}
+                      </span>
+                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                        <DollarSign size={14} /> {course.price}
+                      </span>
+                      <span className="bg-secondary text-secondary-foreground px-3 py-1">
+                        {course.level}
+                      </span>
+                      {course.location && (
+                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                          <MapPin size={14} /> {course.location}
                         </span>
-                        {course.location && (
-                          <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                            <MapPin size={14} /> {course.location}
-                          </span>
-                        )}
-                        {seatInfo && (
-                          <span
-                            className={`flex items-center gap-1 px-3 py-1 ${
-                              seatInfo.full
-                                ? "bg-destructive/20 text-destructive"
-                                : seatInfo.remaining <= 3
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-secondary text-secondary-foreground"
-                            }`}
-                          >
-                            <Users size={14} />
-                            {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                      )}
+                      {seatInfo && (
+                        <span
+                          className={`flex items-center gap-1 px-3 py-1 ${
+                            seatInfo.full
+                              ? "bg-destructive/20 text-destructive"
+                              : seatInfo.remaining <= 3
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-secondary text-secondary-foreground"
+                          }`}
+                        >
+                          <Users size={14} />
+                          {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
