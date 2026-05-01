@@ -68,5 +68,10 @@ export const useClassesAndSeats = () => {
 
   const getClassBySlug = (slug: string) => classes.find((c) => c.slug === slug);
 
-  return { classes, seats, loading, refresh, getRemaining, getClassBySlug };
+  const getClassesByCourseKey = (key: string) =>
+    classes
+      .filter((c) => c.course_key === key)
+      .sort((a, b) => a.class_date.localeCompare(b.class_date));
+
+  return { classes, seats, loading, refresh, getRemaining, getClassBySlug, getClassesByCourseKey };
 };
