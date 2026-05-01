@@ -396,12 +396,14 @@ const ClassesSection = () => {
                       </p>
                     </div>
 
-                    <a
-                      href="#contact"
-                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
+                    <button
+                      type="button"
+                      onClick={() => openSignup(course)}
+                      disabled={seatInfo?.full}
+                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Sign Up Now
-                    </a>
+                      {seatInfo?.full ? "Class Full" : "Sign Up Now"}
+                    </button>
                   </div>
                 )}
               </div>
