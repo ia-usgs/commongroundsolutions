@@ -411,6 +411,13 @@ const ClassesSection = () => {
           })}
         </div>
       </div>
+      <SignupModal
+        open={modalState.open}
+        onOpenChange={(open) => setModalState({ ...modalState, open })}
+        classId={modalState.classId}
+        className={modalState.className}
+        price={modalState.price}
+      />
     </section>
   );
 };
