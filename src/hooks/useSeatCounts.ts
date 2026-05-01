@@ -15,6 +15,10 @@ export type ClassRow = {
   capacity: number;
   class_date: string;
   price_cents: number;
+  course_key: string | null;
+  start_time: string | null;
+  end_time: string | null;
+  location: string | null;
 };
 
 export const useClassesAndSeats = () => {
