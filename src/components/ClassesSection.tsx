@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin, Users } from "lucide-react";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classRifleFundamental from "@/assets/rifle-fundamental.png";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
 import classDefensive from "@/assets/class-defensive.jpg";
+import SignupModal from "./SignupModal";
+import { useClassesAndSeats } from "@/hooks/useSeatCounts";
 
 const courses = [
   {
     title: "Pistol Performance",
     image: classPistol,
     dates: [
-      { label: "May 2nd", soldOut: true },
-      { label: "May 23rd", soldOut: false },
+      { label: "May 2nd", soldOut: true, slug: "pistol-performance-may-2" },
+      { label: "May 23rd", soldOut: false, slug: "pistol-performance-may-23" },
     ],
     time: "0730–1330",
     price: "$225",
@@ -54,6 +56,7 @@ const courses = [
     title: "Baseline Pistol Course",
     image: classPistolFundamental,
     date: "May 24th",
+    slug: "baseline-pistol-may-24",
     time: "0730–1330",
     price: "$180",
     level: "All Levels",
@@ -92,6 +95,7 @@ const courses = [
     title: "Defensive Dynamic Performance",
     image: classDefensive,
     date: "TBA",
+    slug: "defensive-dynamic-tba",
     time: "0730–1430",
     price: "$265",
     level: "Intermediate",
@@ -204,6 +208,34 @@ const courses = [
 
 const ClassesSection = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [selectedSlugs, setSelectedSlugs] = useState<Record<string, string>>({});
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    classId: string | null;
+    className: string;
+    price: string;
+  }>({ open: false, classId: null, className: "", price: "" });
+  const { getRemaining, getClassBySlug } = useClassesAndSeats();
+
+  const resolveSlug = (course: any): string | undefined => {
+    if (course.dates) {
+      return selectedSlugs[course.title] ?? course.dates.find((d: any) => !d.soldOut)?.slug ?? course.dates[0].slug;
+    }
+    return course.slug;
+  };
+
+  const openSignup = (course: any) => {
+    const slug = resolveSlug(course);
+    if (!slug) return;
+    const cls = getClassBySlug(slug);
+    if (!cls) return;
+    setModalState({
+      open: true,
+      classId: cls.id,
+      className: course.title,
+      price: course.price,
+    });
+  };
 
   return (
     <section id="classes" className="py-24 bg-background">
@@ -218,6 +250,8 @@ const ClassesSection = () => {
         <div className="max-w-3xl mx-auto space-y-8">
           {courses.map((course) => {
             const isExpanded = expanded === course.title;
+            const activeSlug = resolveSlug(course);
+            const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
             return (
               <div
                 key={course.title}
@@ -265,12 +299,17 @@ const ClassesSection = () => {
                             <Calendar size={14} />
                             <select
                               className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
-                              defaultValue={
-                                course.dates.find((d) => !d.soldOut)?.label ?? course.dates[0].label
+                              value={
+                                selectedSlugs[course.title] ??
+                                course.dates.find((d: any) => !d.soldOut)?.slug ??
+                                course.dates[0].slug
+                              }
+                              onChange={(e) =>
+                                setSelectedSlugs({ ...selectedSlugs, [course.title]: e.target.value })
                               }
                             >
-                              {course.dates.map((d) => (
-                                <option key={d.label} value={d.label} disabled={d.soldOut} className="bg-card text-foreground">
+                              {course.dates.map((d: any) => (
+                                <option key={d.slug} value={d.slug} disabled={d.soldOut} className="bg-card text-foreground">
                                   {d.label}{d.soldOut ? " — Sold Out" : ""}
                                 </option>
                               ))}
@@ -293,6 +332,20 @@ const ClassesSection = () => {
                         {course.location && (
                           <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
                             <MapPin size={14} /> {course.location}
+                          </span>
+                        )}
+                        {seatInfo && (
+                          <span
+                            className={`flex items-center gap-1 px-3 py-1 ${
+                              seatInfo.full
+                                ? "bg-destructive/20 text-destructive"
+                                : seatInfo.remaining <= 3
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-secondary text-secondary-foreground"
+                            }`}
+                          >
+                            <Users size={14} />
+                            {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
                           </span>
                         )}
                       </div>
@@ -343,12 +396,14 @@ const ClassesSection = () => {
                       </p>
                     </div>
 
-                    <a
-                      href="#contact"
-                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
+                    <button
+                      type="button"
+                      onClick={() => openSignup(course)}
+                      disabled={seatInfo?.full}
+                      className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Sign Up Now
-                    </a>
+                      {seatInfo?.full ? "Class Full" : "Sign Up Now"}
+                    </button>
                   </div>
                 )}
               </div>
@@ -356,6 +411,13 @@ const ClassesSection = () => {
           })}
         </div>
       </div>
+      <SignupModal
+        open={modalState.open}
+        onOpenChange={(open) => setModalState({ ...modalState, open })}
+        classId={modalState.classId}
+        className={modalState.className}
+        price={modalState.price}
+      />
     </section>
   );
 };
