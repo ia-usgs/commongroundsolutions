@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin, Users } from "lucide-react";
+import { format, parseISO } from "date-fns";
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classRifleFundamental from "@/assets/rifle-fundamental.png";
@@ -9,19 +10,16 @@ import classDefensive from "@/assets/class-defensive.jpg";
 import SignupModal from "./SignupModal";
 import { useClassesAndSeats } from "@/hooks/useSeatCounts";
 
+// Course definitions hold rich content. Dates / times / prices / seats now come from the database.
+// `courseKey` links to the `course_key` column on the `classes` table — add or remove DB rows in the
+// admin dashboard and they automatically appear here.
 const courses = [
   {
+    courseKey: "pistol-performance",
     title: "Pistol Performance",
     image: classPistol,
-    dates: [
-      { label: "May 2nd", soldOut: true, slug: "pistol-performance-may-2" },
-      { label: "May 23rd", soldOut: false, slug: "pistol-performance-may-23" },
-    ],
-    time: "0730–1330",
-    price: "$225",
-    level: "All Levels",
-    location: "Nuevo, CA",
-    comingSoon: false,
+    fallbackPrice: "$225",
+    fallbackLevel: "All Levels",
     description:
       "For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment.",
     details: [
@@ -53,15 +51,11 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
+    courseKey: "baseline-pistol",
     title: "Baseline Pistol Course",
     image: classPistolFundamental,
-    date: "May 24th",
-    slug: "baseline-pistol-may-24",
-    time: "0730–1330",
-    price: "$180",
-    level: "All Levels",
-    location: "Nuevo, CA",
-    comingSoon: false,
+    fallbackPrice: "$180",
+    fallbackLevel: "All Levels",
     description:
       "Whether you've never touched a firearm or you're looking to sharpen your fundamentals, this course is designed to build real confidence and measurable skill from the ground up.",
     details: [
@@ -92,15 +86,11 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
+    courseKey: "defensive-dynamic",
     title: "Defensive Dynamic Performance",
     image: classDefensive,
-    date: "TBA",
-    slug: "defensive-dynamic-tba",
-    time: "0730–1430",
-    price: "$265",
-    level: "Intermediate",
-    location: "Nuevo, CA",
-    comingSoon: false,
+    fallbackPrice: "$265",
+    fallbackLevel: "Intermediate",
     description:
       "The Defensive Dynamic Performance Course is designed to bridge the gap between traditional defensive firearms training and performance-based shooting. This course introduces shooters to competition-style stages built around realistic defensive applications, requiring both technical proficiency and critical decision-making under pressure.",
     details: [
@@ -142,15 +132,11 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
+    courseKey: "baseline-rifle",
     title: "Baseline Rifle",
     image: classRifleFundamental,
-    date: "TBA",
-    slug: "baseline-rifle-tba",
-    time: "0730–1330",
-    price: "$225",
-    level: "All Levels",
-    location: "Nuevo, CA",
-    comingSoon: false,
+    fallbackPrice: "$225",
+    fallbackLevel: "All Levels",
     description:
       "The Baseline Rifle Course is built to develop shooters who understand why they perform the way they do—not just how to send rounds downrange. Whether you're new to the rifle platform or looking to refine your performance, this course focuses on building a dependable foundation that holds up under pressure.",
     details: [
@@ -188,30 +174,35 @@ const courses = [
       "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
   },
   {
+    courseKey: "scope-carbine-1",
     title: "Scope Carbine I",
     image: classCarbine1,
-    date: "TBA",
-    slug: "scope-carbine-1-tba",
-    time: "0730–1330",
-    price: "$350",
-    level: "All Levels",
-    location: "Nuevo, CA",
-    comingSoon: true,
+    fallbackPrice: "$350",
+    fallbackLevel: "All Levels",
+    forceComingSoon: true,
     description: "Introductory scoped carbine course covering precision shooting fundamentals, scope zeroing, and positional shooting techniques. 6 spots available.",
   },
   {
+    courseKey: "scope-carbine-2",
     title: "Scope Carbine II",
     image: classCarbine,
-    date: "TBA",
-    slug: "scope-carbine-2-tba",
-    time: "0730–1330",
-    price: "$375",
-    level: "Intermediate",
-    location: "Nuevo, CA",
-    comingSoon: true,
+    fallbackPrice: "$375",
+    fallbackLevel: "Intermediate",
+    forceComingSoon: true,
     description: "Advanced scoped carbine course building on Scope Carbine I with extended distance engagements and advanced positional work. 6 spots available.",
   },
 ];
+
+const FAR_FUTURE_DATE = "2099-12-31";
+
+const formatDateLabel = (iso: string) => {
+  if (!iso || iso === FAR_FUTURE_DATE) return "TBA";
+  try {
+    return format(parseISO(iso), "MMM d");
+  } catch {
+    return iso;
+  }
+};
 
 const ClassesSection = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -222,17 +213,16 @@ const ClassesSection = () => {
     className: string;
     price: string;
   }>({ open: false, classId: null, className: "", price: "" });
-  const { getRemaining, getClassBySlug } = useClassesAndSeats();
+  const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
 
-  const resolveSlug = (course: any): string | undefined => {
-    if (course.dates) {
-      return selectedSlugs[course.title] ?? course.dates.find((d: any) => !d.soldOut)?.slug ?? course.dates[0].slug;
-    }
-    return course.slug;
+  const resolveSlug = (courseKey: string, instances: ReturnType<typeof getClassesByCourseKey>) => {
+    if (instances.length === 0) return undefined;
+    const open = instances.filter((i) => i.status === "open");
+    const list = open.length > 0 ? open : instances;
+    return selectedSlugs[courseKey] ?? list[0].slug;
   };
 
-  const openSignup = (course: any) => {
-    const slug = resolveSlug(course);
+  const openSignup = (course: typeof courses[number], slug: string | undefined, displayPrice: string) => {
     if (!slug) return;
     const cls = getClassBySlug(slug);
     if (!cls) return;
@@ -240,7 +230,7 @@ const ClassesSection = () => {
       open: true,
       classId: cls.id,
       className: course.title,
-      price: course.price,
+      price: displayPrice,
     });
   };
 
@@ -256,17 +246,32 @@ const ClassesSection = () => {
 
         <div className="max-w-3xl mx-auto space-y-8">
           {courses.map((course) => {
-            const isExpanded = expanded === course.title;
-            const activeSlug = resolveSlug(course);
+            const isExpanded = expanded === course.courseKey;
+            const instances = getClassesByCourseKey(course.courseKey);
+            const activeSlug = resolveSlug(course.courseKey, instances);
+            const activeInstance = activeSlug ? instances.find((i) => i.slug === activeSlug) : undefined;
             const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
+
+            const onlyTba = instances.length > 0 && instances.every((i) => i.status === "tba" || i.status === "closed");
+            const comingSoon = course.forceComingSoon || instances.length === 0 || onlyTba;
+
+            const displayPrice = activeInstance
+              ? `$${(activeInstance.price_cents / 100).toFixed(activeInstance.price_cents % 100 === 0 ? 0 : 2)}`
+              : course.fallbackPrice;
+            const displayTime = activeInstance && activeInstance.start_time && activeInstance.end_time
+              ? `${activeInstance.start_time}–${activeInstance.end_time}`
+              : "0730–1330";
+            const displayLocation = activeInstance?.location ?? "Nuevo, CA";
+            const displayLevel = activeInstance?.name?.match(/intermediate/i) ? "Intermediate" : course.fallbackLevel;
+
             return (
               <div
-                key={course.title}
+                key={course.courseKey}
                 className="bg-card border border-border overflow-hidden group hover:border-primary/50 transition-all"
               >
                 <div
-                  className={course.comingSoon ? "" : "cursor-pointer"}
-                  onClick={() => !course.comingSoon && setExpanded(isExpanded ? null : course.title)}
+                  className={comingSoon ? "" : "cursor-pointer"}
+                  onClick={() => !comingSoon && setExpanded(isExpanded ? null : course.courseKey)}
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
@@ -275,7 +280,7 @@ const ClassesSection = () => {
                       className="w-full h-full object-cover bg-card group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
-                    {course.comingSoon && (
+                    {comingSoon && (
                       <div className="absolute inset-0 flex items-center justify-center bg-background/60">
                         <span className="font-heading text-2xl tracking-widest text-primary uppercase">
                           Coming Soon
@@ -288,7 +293,7 @@ const ClassesSection = () => {
                       <h3 className="text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
-                      {!course.comingSoon && (
+                      {!comingSoon && (
                         isExpanded ? (
                           <ChevronUp className="text-primary" size={24} />
                         ) : (
@@ -297,7 +302,7 @@ const ClassesSection = () => {
                       )}
                     </div>
                     <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
-                      {course.dates ? (
+                      {instances.length > 1 ? (
                         <span
                           className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1"
                           onClick={(e) => e.stopPropagation()}
@@ -305,42 +310,47 @@ const ClassesSection = () => {
                           <Calendar size={14} />
                           <select
                             className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
-                            value={
-                              selectedSlugs[course.title] ??
-                              course.dates.find((d: any) => !d.soldOut)?.slug ??
-                              course.dates[0].slug
-                            }
+                            value={activeSlug ?? instances[0].slug}
                             onChange={(e) =>
-                              setSelectedSlugs({ ...selectedSlugs, [course.title]: e.target.value })
+                              setSelectedSlugs({ ...selectedSlugs, [course.courseKey]: e.target.value })
                             }
                           >
-                            {course.dates.map((d: any) => (
-                              <option key={d.slug} value={d.slug} disabled={d.soldOut} className="bg-card text-foreground">
-                                {d.label}{d.soldOut ? " — Sold Out" : ""}
-                              </option>
-                            ))}
+                            {instances.map((i) => {
+                              const seat = getRemaining(i.slug);
+                              const isSoldOut = i.status === "sold_out" || (seat?.full ?? false);
+                              const isTba = i.status === "tba" || i.class_date === FAR_FUTURE_DATE;
+                              return (
+                                <option
+                                  key={i.slug}
+                                  value={i.slug}
+                                  disabled={isSoldOut || i.status === "closed"}
+                                  className="bg-card text-foreground"
+                                >
+                                  {isTba ? "TBA" : formatDateLabel(i.class_date)}
+                                  {isSoldOut ? " — Sold Out" : ""}
+                                </option>
+                              );
+                            })}
                           </select>
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                          <Calendar size={14} /> {course.date}
+                          <Calendar size={14} /> {activeInstance ? formatDateLabel(activeInstance.class_date) : "TBA"}
                         </span>
                       )}
                       <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
-                        <Clock size={14} /> {course.time}
+                        <Clock size={14} /> {displayTime}
                       </span>
                       <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                        <DollarSign size={14} /> {course.price}
+                        <DollarSign size={14} /> {displayPrice}
                       </span>
                       <span className="bg-secondary text-secondary-foreground px-3 py-1">
-                        {course.level}
+                        {displayLevel}
                       </span>
-                      {course.location && (
-                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                          <MapPin size={14} /> {course.location}
-                        </span>
-                      )}
-                      {seatInfo && (
+                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
+                        <MapPin size={14} /> {displayLocation}
+                      </span>
+                      {seatInfo && !comingSoon && (
                         <span
                           className={`flex items-center gap-1 px-3 py-1 ${
                             seatInfo.full
@@ -358,7 +368,7 @@ const ClassesSection = () => {
                   </div>
                 </div>
 
-                {isExpanded && !course.comingSoon && (
+                {isExpanded && !comingSoon && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
                     <p className="text-foreground/80 leading-relaxed">
                       {course.description}
@@ -403,7 +413,7 @@ const ClassesSection = () => {
 
                     <button
                       type="button"
-                      onClick={() => openSignup(course)}
+                      onClick={() => openSignup(course, activeSlug, displayPrice)}
                       disabled={seatInfo?.full}
                       className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                     >

@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           capacity: number
           class_date: string
+          course_key: string | null
           created_at: string
           description: string | null
           end_time: string | null
@@ -34,6 +35,7 @@ export type Database = {
         Insert: {
           capacity?: number
           class_date: string
+          course_key?: string | null
           created_at?: string
           description?: string | null
           end_time?: string | null
@@ -50,6 +52,7 @@ export type Database = {
         Update: {
           capacity?: number
           class_date?: string
+          course_key?: string | null
           created_at?: string
           description?: string | null
           end_time?: string | null
