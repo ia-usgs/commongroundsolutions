@@ -53,7 +53,18 @@ type ClassRow = {
   end_time: string | null;
   price_cents: number;
   location: string | null;
+  course_key: string | null;
 };
+
+// Display order + labels for grouping classes by course on the admin page.
+const COURSE_GROUPS: { key: string; label: string }[] = [
+  { key: "pistol-performance", label: "Pistol Performance" },
+  { key: "baseline-pistol", label: "Baseline Pistol Course" },
+  { key: "defensive-dynamic", label: "Defensive Dynamic Performance" },
+  { key: "baseline-rifle", label: "Baseline Rifle" },
+  { key: "scope-carbine-1", label: "Scope Carbine I" },
+  { key: "scope-carbine-2", label: "Scope Carbine II" },
+];
 
 const Admin = () => {
   const navigate = useNavigate();
