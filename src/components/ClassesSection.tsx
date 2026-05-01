@@ -299,12 +299,17 @@ const ClassesSection = () => {
                             <Calendar size={14} />
                             <select
                               className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
-                              defaultValue={
-                                course.dates.find((d) => !d.soldOut)?.label ?? course.dates[0].label
+                              value={
+                                selectedSlugs[course.title] ??
+                                course.dates.find((d: any) => !d.soldOut)?.slug ??
+                                course.dates[0].slug
+                              }
+                              onChange={(e) =>
+                                setSelectedSlugs({ ...selectedSlugs, [course.title]: e.target.value })
                               }
                             >
-                              {course.dates.map((d) => (
-                                <option key={d.label} value={d.label} disabled={d.soldOut} className="bg-card text-foreground">
+                              {course.dates.map((d: any) => (
+                                <option key={d.slug} value={d.slug} disabled={d.soldOut} className="bg-card text-foreground">
                                   {d.label}{d.soldOut ? " — Sold Out" : ""}
                                 </option>
                               ))}
