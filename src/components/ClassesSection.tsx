@@ -356,7 +356,7 @@ const ClassesSection = () => {
                       <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
                         <MapPin size={14} /> {displayLocation}
                       </span>
-                      {seatInfo && !comingSoon && (
+                      {seatInfo && (
                         <span
                           className={`flex items-center gap-1 px-3 py-1 ${
                             seatInfo.full
