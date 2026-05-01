@@ -217,8 +217,14 @@ const ClassesSection = () => {
 
   const resolveSlug = (courseKey: string, instances: ReturnType<typeof getClassesByCourseKey>) => {
     if (instances.length === 0) return undefined;
+    // Prefer Open instances that still have seats; fall back to any open; then anything at all.
+    const openWithSeats = instances.filter((i) => {
+      if (i.status !== "open") return false;
+      const seat = getRemaining(i.slug);
+      return !seat?.full;
+    });
     const open = instances.filter((i) => i.status === "open");
-    const list = open.length > 0 ? open : instances;
+    const list = openWithSeats.length > 0 ? openWithSeats : open.length > 0 ? open : instances;
     return selectedSlugs[courseKey] ?? list[0].slug;
   };
 
