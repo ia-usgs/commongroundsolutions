@@ -126,6 +126,34 @@ const Admin = () => {
     navigate("/auth", { replace: true });
   };
 
+  const updateClassField = (id: string, field: keyof ClassRow, value: any) => {
+    setClasses((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
+  };
+
+  const saveClass = async (c: ClassRow) => {
+    const priceCents = Number(c.price_cents);
+    const capacity = Number(c.capacity);
+    if (!c.class_date || isNaN(priceCents) || isNaN(capacity) || capacity < 1) {
+      toast.error("Date, price, and capacity (≥1) are required");
+      return;
+    }
+    const { error } = await supabase
+      .from("classes")
+      .update({
+        class_date: c.class_date,
+        start_time: c.start_time,
+        end_time: c.end_time,
+        price_cents: priceCents,
+        capacity,
+        status: c.status,
+        location: c.location,
+      })
+      .eq("id", c.id);
+    if (error) return toast.error(error.message);
+    toast.success(`${c.name} updated`);
+    loadData();
+  };
+
   const classMap = Object.fromEntries(classes.map((c) => [c.id, c]));
   const filtered = signups.filter((s) => filter === "all" || s.status === filter);
 
