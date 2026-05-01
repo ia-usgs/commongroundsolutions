@@ -14,16 +14,165 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      classes: {
+        Row: {
+          capacity: number
+          class_date: string
+          created_at: string
+          description: string | null
+          end_time: string | null
+          id: string
+          level: string | null
+          location: string | null
+          name: string
+          price_cents: number
+          slug: string
+          start_time: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number
+          class_date: string
+          created_at?: string
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          level?: string | null
+          location?: string | null
+          name: string
+          price_cents?: number
+          slug: string
+          start_time?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number
+          class_date?: string
+          created_at?: string
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          level?: string | null
+          location?: string | null
+          name?: string
+          price_cents?: number
+          slug?: string
+          start_time?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      signups: {
+        Row: {
+          calendar_event_id: string | null
+          class_id: string
+          confirmed_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          first_name: string
+          id: string
+          last_name: string
+          notes: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone: string | null
+          reference_code: string
+          status: Database["public"]["Enums"]["signup_status"]
+          updated_at: string
+        }
+        Insert: {
+          calendar_event_id?: string | null
+          class_id: string
+          confirmed_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          first_name: string
+          id?: string
+          last_name: string
+          notes?: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone?: string | null
+          reference_code: string
+          status?: Database["public"]["Enums"]["signup_status"]
+          updated_at?: string
+        }
+        Update: {
+          calendar_event_id?: string | null
+          class_id?: string
+          confirmed_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          phone?: string | null
+          reference_code?: string
+          status?: Database["public"]["Enums"]["signup_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_class_seat_counts: {
+        Args: never
+        Returns: {
+          class_id: string
+          confirmed_count: number
+          pending_count: number
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      payment_method: "zelle" | "venmo"
+      signup_status: "pending" | "confirmed" | "cancelled" | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +299,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      payment_method: ["zelle", "venmo"],
+      signup_status: ["pending", "confirmed", "cancelled", "expired"],
+    },
   },
 } as const
