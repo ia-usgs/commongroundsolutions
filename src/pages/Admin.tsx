@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-safe";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -12,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { LogOut, CheckCircle2, XCircle } from "lucide-react";
+import { LogOut, CheckCircle2, XCircle, Save } from "lucide-react";
 
 type Signup = {
   id: string;
