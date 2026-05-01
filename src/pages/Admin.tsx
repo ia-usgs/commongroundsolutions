@@ -169,6 +169,41 @@ const Admin = () => {
     loadData();
   };
 
+  const addClassInstance = async (courseKey: string, courseLabel: string) => {
+    // Generate a unique slug suffix
+    const stamp = Date.now().toString(36);
+    const slug = `${courseKey}-${stamp}`;
+    // Sensible defaults pulled from an existing instance of the same course, if available
+    const template = classes.find((c) => c.course_key === courseKey);
+    const { error } = await supabase.from("classes").insert({
+      slug,
+      course_key: courseKey,
+      name: template?.name ?? courseLabel,
+      class_date: "2099-12-31",
+      start_time: template?.start_time ?? "0730",
+      end_time: template?.end_time ?? "1330",
+      price_cents: template?.price_cents ?? 0,
+      capacity: template?.capacity ?? 12,
+      location: template?.location ?? "Nuevo, CA",
+      status: "tba",
+    });
+    if (error) return toast.error(error.message);
+    toast.success(`New ${courseLabel} class added — set the date and details, then Save.`);
+    loadData();
+  };
+
+  const deleteClass = async (c: ClassRow) => {
+    const linked = signups.filter((s) => s.class_id === c.id && s.status !== "cancelled").length;
+    const warning = linked > 0
+      ? `This class has ${linked} active signup(s). Deleting it will leave those signups orphaned. Continue?`
+      : `Delete "${c.name}" (${c.class_date})? This cannot be undone.`;
+    if (!confirm(warning)) return;
+    const { error } = await supabase.from("classes").delete().eq("id", c.id);
+    if (error) return toast.error(error.message);
+    toast.success("Class deleted");
+    loadData();
+  };
+
   const classMap = Object.fromEntries(classes.map((c) => [c.id, c]));
   const filtered = signups.filter((s) => filter === "all" || s.status === filter);
 
