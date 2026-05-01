@@ -36,7 +36,10 @@ type ClassRow = {
   capacity: number;
   status: string;
   class_date: string;
+  start_time: string | null;
+  end_time: string | null;
   price_cents: number;
+  location: string | null;
 };
 
 const Admin = () => {
