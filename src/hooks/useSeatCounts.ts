@@ -45,7 +45,7 @@ export const useClassesAndSeats = () => {
   useEffect(() => {
     refresh();
     const channel = supabase
-      .channel("signups-seats")
+      .channel(`signups-seats-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "signups" },
