@@ -8,7 +8,7 @@ import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
 import classDefensive from "@/assets/class-defensive.jpg";
 import cprFlyer from "@/assets/cpr-certification.png";
-import type { Course, CourseKey } from "./types";
+import type { Course, CourseKey } from "@/features/courses/types";
 
 const RENTAL_NOTE =
   "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.";
