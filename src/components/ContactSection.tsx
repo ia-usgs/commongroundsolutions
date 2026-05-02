@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { SITE } from "@/config/site";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", message: "" });
@@ -16,7 +17,7 @@ const ContactSection = () => {
     setIsSubmitting(true);
     try {
       const formBody = new FormData();
-      formBody.append("access_key", "4b457fd4-94f4-4db1-a995-2671499083f9");
+      formBody.append("access_key", SITE.web3formsAccessKey);
       formBody.append("name", formData.name);
       formBody.append("email", formData.email);
       formBody.append("phone", formData.phone);
@@ -61,11 +62,11 @@ const ContactSection = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4 text-foreground/80">
                 <Mail className="text-primary shrink-0" size={20} />
-                <span>cgstraininggroup@gmail.com</span>
+                <span>{SITE.email}</span>
               </div>
               <div className="flex items-center gap-4 text-foreground/80">
                 <MapPin className="text-primary shrink-0" size={20} />
-                <span>Southern California</span>
+                <span>{SITE.region}</span>
               </div>
             </div>
           </div>
