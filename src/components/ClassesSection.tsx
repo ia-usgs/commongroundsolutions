@@ -1,266 +1,12 @@
 import { useState } from "react";
-import { Calendar, Clock, DollarSign, ChevronDown, ChevronUp, MapPin, Users } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import classPistol from "@/assets/class-pistol.jpg";
-import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
-import classRifleFundamental from "@/assets/rifle-fundamental.png";
-import classCarbine from "@/assets/class-scoped-carbine.jpg";
-import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
-import classDefensive from "@/assets/class-defensive.jpg";
-import SignupModal from "./SignupModal";
-import { useClassesAndSeats } from "@/hooks/useSeatCounts";
-
-// Course definitions hold rich content. Dates / times / prices / seats now come from the database.
-// `courseKey` links to the `course_key` column on the `classes` table — add or remove DB rows in the
-// admin dashboard and they automatically appear here.
-const courses = [
-  {
-    courseKey: "pistol-performance",
-    title: "Pistol Performance",
-    image: classPistol,
-    fallbackPrice: "$225",
-    fallbackLevel: "All Levels",
-    description:
-      "For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment.",
-    details: [
-      "All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.",
-      "Each course emphasizes safety, accountability, and real-world application, while delivering clear, step-by-step coaching to build confidence and competence at every level.",
-      "Advanced grip and recoil management",
-      "Accuracy and consistency drills",
-      "Efficient draw and presentation",
-      "Target transitions",
-      "Attack and control",
-      "Speed vs. precision balance",
-      "Performance-based shooting drills / Competition style stages",
-      "This course focuses on developing speed, accuracy, and efficiency under structured drills.",
-    ],
-    requirements: [
-      "Reliable Pistol",
-      "500 round count",
-      "At least two magazines",
-      "Magazine carriers",
-      "OWB (Outside the waistband) or IWB (Inside the waistband) Holster (no nylon holsters permitted)",
-      "Reliable and sturdy EDC (everyday carry) belt",
-      "Eye and ear protection",
-      "Appropriate clothing for range (pants, shirt, closed-toe shoes)",
-      "Weapons maintenance & cleaning equipment",
-      "Water and snacks",
-      "Chair",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-  {
-    courseKey: "baseline-pistol",
-    title: "Baseline Pistol Course",
-    image: classPistolFundamental,
-    fallbackPrice: "$180",
-    fallbackLevel: "All Levels",
-    description:
-      "Whether you've never touched a firearm or you're looking to sharpen your fundamentals, this course is designed to build real confidence and measurable skill from the ground up.",
-    details: [
-      "Many shooters plateau early due to gaps in fundamentals. This course fixes that.",
-      "You'll learn:",
-      "Proven firearm safety principles you can rely on under stress",
-      "How your pistol actually works so you're not just \"using it,\" you understand it",
-      "Proper grip, stance, and trigger control for consistent accuracy",
-      "Safe and efficient loading/unloading procedures",
-      "Core marksmanship fundamentals used by experienced shooters",
-      "Professional range etiquette and safety standards",
-      "This isn't just a beginner class. It's a foundation course. New shooters leave with confidence and clarity. Experienced shooters leave with tighter groups, better control, and a deeper understanding of their mechanics.",
-    ],
-    requirements: [
-      "Reliable Pistol",
-      "300–400 round count",
-      "At least two magazines",
-      "Magazine carriers",
-      "OWB (Outside the waistband) or IWB (Inside the waistband) Holster (no nylon holsters permitted)",
-      "Reliable and sturdy EDC (everyday carry) belt",
-      "Eye and ear protection",
-      "Appropriate clothing for range (pants, shirt, closed-toe shoes)",
-      "Weapons maintenance & cleaning equipment",
-      "Water and snacks",
-      "Chair",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-  {
-    courseKey: "defensive-dynamic",
-    title: "Defensive Dynamic Performance",
-    image: classDefensive,
-    fallbackPrice: "$265",
-    fallbackLevel: "Intermediate",
-    description:
-      "The Defensive Dynamic Performance Course is designed to bridge the gap between traditional defensive firearms training and performance-based shooting. This course introduces shooters to competition-style stages built around realistic defensive applications, requiring both technical proficiency and critical decision-making under pressure.",
-    details: [
-      "Students will engage in structured, stage-based scenarios that emphasize marksmanship, movement, efficiency, and problem-solving. Unlike static training environments, this course forces shooters to process information, manage their weapon systems, and execute fundamentals at speed in evolving situations.",
-      "This is not a fundamentals-only course. It is a performance validation environment where shooters must apply their existing skills in a dynamic setting that exposes strengths, limitations, and decision-making habits. Through guided instruction and performance-based feedback, students will develop the ability to:",
-      "Apply fundamentals under stress",
-      "Think critically while engaging targets",
-      "Balance speed and accountability",
-      "Adapt to changing problems in real time",
-      "Execute competition-style shooting stages with defensive context and accountability",
-      "Perform effective target transitions under time and cognitive pressure",
-      "Utilize movement, positioning, and use of cover within stage design",
-      "Demonstrate proper weapons manipulation (reloads, malfunctions, transitions) under stress",
-      "Make rapid shoot/no-shoot and priority decisions based on stage conditions",
-      "Identify and correct performance deficiencies through instructor-led self-diagnosis",
-      "Integrate movement with shooting while maintaining control and awareness",
-      "This course is open to competent, safety-conscious shooters who are looking to elevate their capability beyond static drills and into applied defensive performance.",
-    ],
-    requirements: [
-      "Carbine",
-      "Pistol",
-      "IFAK",
-      "Tourniquet (TQ)",
-      "Duty Belt with OWB or IWB Holster (No SERPA)",
-      "Rifle sling",
-      "At least 3 rifle magazines",
-      "At least 3 pistol magazines",
-      "500 rounds rifle / 500 rounds pistol",
-      "2 magazine holders for pistol magazines (mag pouch)",
-      "1 magazine holder for rifle magazines (mag pouch)",
-      "Eye and ear protection",
-      "Appropriate clothing for terrain and weather",
-      "Weapons maintenance & cleaning equipment",
-      "Sunscreen",
-      "Food and water",
-      "Permanent marker",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-  {
-    courseKey: "baseline-rifle",
-    title: "Baseline Rifle",
-    image: classRifleFundamental,
-    fallbackPrice: "$225",
-    fallbackLevel: "All Levels",
-    description:
-      "The Baseline Rifle Course is built to develop shooters who understand why they perform the way they do—not just how to send rounds downrange. Whether you're new to the rifle platform or looking to refine your performance, this course focuses on building a dependable foundation that holds up under pressure.",
-    details: [
-      "At CGS, we don't chase gimmicks or trends. We focus on the fundamentals that actually drive performance—then teach you how to diagnose and correct your own shooting.",
-      "In this course, you'll develop:",
-      "A strong foundation in rifle marksmanship principles",
-      "The ability to isolate and correct fundamental errors",
-      "Working knowledge of rifle conditions and cycle of operations",
-      "Efficient shooting positions for stability and control",
-      "Understanding of mechanical offset and practical application",
-      "Immediate and remedial action for common malfunctions",
-      "Optic setup considerations and back-up sight integration",
-      "Strong-side and support-side shooting capability",
-      "Effective reloads and weapon manipulations",
-      "Sling use for control, support, and transitions",
-      "Movement techniques during engagements",
-      "Shooting from cover and positional awareness",
-      "Engagement techniques for close to mid-range distances",
-      "This course is designed to give you a repeatable process—so you're not relying on luck or guesswork. You'll leave with the tools to train with purpose, track your progress, and continue improving long after the course ends.",
-    ],
-    requirements: [
-      "Rifle",
-      "500 rounds of rifle ammunition",
-      "Rifle sling",
-      "At least 3 rifle magazines",
-      "Belt / Chest Rig",
-      "At least 1 magazine holder for rifle magazines",
-      "Ear & Eye Protection",
-      "Permanent Marker",
-      "Appropriate clothing for terrain and weather",
-      "Weapons maintenance & cleaning equipment",
-      "Food & Water",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-  {
-    courseKey: "scope-carbine-1",
-    title: "Scope Carbine I",
-    image: classCarbine1,
-    fallbackPrice: "$350",
-    fallbackLevel: "All Levels",
-    forceComingSoon: true,
-    description:
-      "The Scope Carbine I course introduces shooters to the fundamentals of running a scoped rifle with precision and consistency. This course is designed for shooters who want to develop a true understanding of their optic, their rifle, and the principles that drive accurate shooting at distance. Class size is limited to 6 students for maximum instructor attention.",
-    details: [
-      "This course bridges the gap between general carbine work and precision rifle shooting. Students will learn how to properly set up a scoped rifle, understand their optic's reticle and turrets, and apply marksmanship fundamentals from a variety of positions.",
-      "In this course, you will develop:",
-      "Proper scope mounting, leveling, and zeroing procedures",
-      "Understanding of MOA vs MIL and reticle subtensions",
-      "Correct body position and natural point of aim",
-      "Use of bipod, bag, and barricade support",
-      "Prone, kneeling, and improvised shooting positions",
-      "Wind reading basics and environmental considerations",
-      "Calling your shots and self-diagnosing misses",
-      "By the end of the course, students will have a confident, repeatable process for engaging targets at distance with a scoped carbine.",
-    ],
-    requirements: [
-      "Scoped rifle (zeroed if possible)",
-      "300 rounds of rifle ammunition",
-      "Rifle sling",
-      "At least 3 rifle magazines",
-      "Bipod or shooting bag",
-      "Belt / Chest Rig",
-      "Magazine holders for rifle magazines",
-      "Ear & Eye Protection",
-      "Permanent Marker & notebook",
-      "Appropriate clothing for terrain and weather",
-      "Weapons maintenance & cleaning equipment",
-      "Food & Water",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-  {
-    courseKey: "scope-carbine-2",
-    title: "Scope Carbine II",
-    image: classCarbine,
-    fallbackPrice: "$375",
-    fallbackLevel: "Intermediate",
-    forceComingSoon: true,
-    description:
-      "Scope Carbine II builds directly on the foundation established in Scope Carbine I. This course pushes shooters into extended distance engagements, advanced positional work, and real-world problem solving with a scoped rifle. Class size is limited to 6 students.",
-    details: [
-      "This is a performance-based course that demands a working knowledge of your optic, rifle, and fundamentals. Students will be challenged with longer distances, time pressure, and unconventional shooting positions.",
-      "In this course, you will develop:",
-      "Extended distance engagements with holdovers and dialed corrections",
-      "Advanced wind calls and environmental adjustments",
-      "Shooting from barricades, rooftops, and improvised supports",
-      "Positional transitions under time pressure",
-      "Multiple-target engagements at varying distances",
-      "Stress-based drills that combine movement and precision",
-      "Diagnosing and correcting performance gaps in real time",
-      "Scope Carbine II is intended for shooters who have completed Scope Carbine I or have equivalent experience and are ready to apply their fundamentals in a more demanding environment.",
-    ],
-    requirements: [
-      "Scoped rifle (confirmed zero)",
-      "400 rounds of rifle ammunition",
-      "Rifle sling",
-      "At least 3 rifle magazines",
-      "Bipod and shooting bag",
-      "Belt / Chest Rig",
-      "Magazine holders for rifle magazines",
-      "Ear & Eye Protection",
-      "Permanent Marker & notebook",
-      "Appropriate clothing for terrain and weather",
-      "Weapons maintenance & cleaning equipment",
-      "Food & Water",
-    ],
-    rentalNote:
-      "If you do not have the required equipment, firearm and gear rentals are available at the time of booking.",
-  },
-];
-
-const FAR_FUTURE_DATE = "2099-12-31";
-
-const formatDateLabel = (iso: string) => {
-  if (!iso || iso === FAR_FUTURE_DATE) return "TBA";
-  try {
-    return format(parseISO(iso), "MMM d");
-  } catch {
-    return iso;
-  }
-};
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useClassesAndSeats } from "@/features/classes/hooks/useClassesAndSeats";
+import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
+import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
+import { CourseDetailsBlock } from "@/features/courses/components/CourseDetailsBlock";
+import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
+import { SignupModal } from "@/features/signups/components/SignupModal";
+import { formatPrice, formatTimeRange } from "@/lib/format";
 
 const ClassesSection = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -271,32 +17,8 @@ const ClassesSection = () => {
     className: string;
     price: string;
   }>({ open: false, classId: null, className: "", price: "" });
+
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
-
-  const resolveSlug = (courseKey: string, instances: ReturnType<typeof getClassesByCourseKey>) => {
-    if (instances.length === 0) return undefined;
-    // Prefer Open instances that still have seats; fall back to any open; then anything at all.
-    const openWithSeats = instances.filter((i) => {
-      if (i.status !== "open") return false;
-      const seat = getRemaining(i.slug);
-      return !seat?.full;
-    });
-    const open = instances.filter((i) => i.status === "open");
-    const list = openWithSeats.length > 0 ? openWithSeats : open.length > 0 ? open : instances;
-    return selectedSlugs[courseKey] ?? list[0].slug;
-  };
-
-  const openSignup = (course: typeof courses[number], slug: string | undefined, displayPrice: string) => {
-    if (!slug) return;
-    const cls = getClassBySlug(slug);
-    if (!cls) return;
-    setModalState({
-      open: true,
-      classId: cls.id,
-      className: course.title,
-      price: displayPrice,
-    });
-  };
 
   return (
     <section id="classes" className="py-24 bg-background">
@@ -309,24 +31,42 @@ const ClassesSection = () => {
         </p>
 
         <div className="max-w-3xl mx-auto space-y-8">
-          {courses.map((course) => {
+          {COURSE_CATALOG.map((course) => {
             const isExpanded = expanded === course.courseKey;
             const instances = getClassesByCourseKey(course.courseKey);
-            const activeSlug = resolveSlug(course.courseKey, instances);
+            const activeSlug = pickPreferredSlug(
+              instances,
+              (slug) => getRemaining(slug)?.full ?? false,
+              selectedSlugs[course.courseKey]
+            );
             const activeInstance = activeSlug ? instances.find((i) => i.slug === activeSlug) : undefined;
             const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
-
-            const onlyTba = instances.length > 0 && instances.every((i) => i.status === "tba" || i.status === "closed");
-            const comingSoon = course.forceComingSoon || instances.length === 0 || onlyTba;
+            const comingSoon = isCourseComingSoon(instances, course.forceComingSoon);
 
             const displayPrice = activeInstance
-              ? `$${(activeInstance.price_cents / 100).toFixed(activeInstance.price_cents % 100 === 0 ? 0 : 2)}`
+              ? formatPrice(activeInstance.price_cents, course.fallbackPrice)
               : course.fallbackPrice;
-            const displayTime = activeInstance && activeInstance.start_time && activeInstance.end_time
-              ? `${activeInstance.start_time}–${activeInstance.end_time}`
-              : "0730–1330";
+            const displayTime = formatTimeRange(
+              activeInstance?.start_time,
+              activeInstance?.end_time,
+              "0730–1330"
+            );
             const displayLocation = activeInstance?.location ?? "Nuevo, CA";
-            const displayLevel = activeInstance?.name?.match(/intermediate/i) ? "Intermediate" : course.fallbackLevel;
+            const displayLevel = activeInstance?.name?.match(/intermediate/i)
+              ? "Intermediate"
+              : course.fallbackLevel;
+
+            const onSignupClick = () => {
+              if (!activeSlug) return;
+              const cls = getClassBySlug(activeSlug);
+              if (!cls) return;
+              setModalState({
+                open: true,
+                classId: cls.id,
+                className: course.title,
+                price: displayPrice,
+              });
+            };
 
             return (
               <div
@@ -363,116 +103,25 @@ const ClassesSection = () => {
                         <ChevronDown className="text-primary" size={24} />
                       )}
                     </div>
-                    <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
-                      {instances.length > 1 ? (
-                        <span
-                          className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Calendar size={14} />
-                          <select
-                            className="bg-transparent text-primary font-heading tracking-wider text-xs focus:outline-none cursor-pointer"
-                            value={activeSlug ?? instances[0].slug}
-                            onChange={(e) =>
-                              setSelectedSlugs({ ...selectedSlugs, [course.courseKey]: e.target.value })
-                            }
-                          >
-                            {instances.map((i) => {
-                              const seat = getRemaining(i.slug);
-                              const isSoldOut = i.status === "sold_out" || (seat?.full ?? false);
-                              const isTba = i.status === "tba" || i.class_date === FAR_FUTURE_DATE;
-                              return (
-                                <option
-                                  key={i.slug}
-                                  value={i.slug}
-                                  disabled={isSoldOut || i.status === "closed"}
-                                  className="bg-card text-foreground"
-                                >
-                                  {isTba ? "TBA" : formatDateLabel(i.class_date)}
-                                  {isSoldOut ? " — Sold Out" : ""}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                          <Calendar size={14} /> {activeInstance ? formatDateLabel(activeInstance.class_date) : "TBA"}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">
-                        <Clock size={14} /> {displayTime}
-                      </span>
-                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                        <DollarSign size={14} /> {displayPrice}
-                      </span>
-                      <span className="bg-secondary text-secondary-foreground px-3 py-1">
-                        {displayLevel}
-                      </span>
-                      <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-                        <MapPin size={14} /> {displayLocation}
-                      </span>
-                      {seatInfo && (
-                        <span
-                          className={`flex items-center gap-1 px-3 py-1 ${
-                            seatInfo.full
-                              ? "bg-destructive/20 text-destructive"
-                              : seatInfo.remaining <= 3
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-secondary text-secondary-foreground"
-                          }`}
-                        >
-                          <Users size={14} />
-                          {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
-                        </span>
-                      )}
-                    </div>
+                    <CourseMetaTabs
+                      instances={instances}
+                      activeSlug={activeSlug}
+                      activeInstance={activeInstance}
+                      onSelectSlug={(slug) =>
+                        setSelectedSlugs({ ...selectedSlugs, [course.courseKey]: slug })
+                      }
+                      getRemaining={getRemaining}
+                      displayTime={displayTime}
+                      displayPrice={displayPrice}
+                      displayLocation={displayLocation}
+                      displayLevel={displayLevel}
+                    />
                   </div>
                 </div>
 
                 {isExpanded && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
-                    <p className="text-foreground/80 leading-relaxed">
-                      {course.description}
-                    </p>
-                    {course.details && (
-                      <>
-                        {course.details.slice(0, 2).map((detail, i) => (
-                          <p key={i} className="text-foreground/80 leading-relaxed">
-                            {detail}
-                          </p>
-                        ))}
-                        <ul className="space-y-2">
-                          {course.details.slice(2, -1).map((detail, i) => (
-                            <li key={i} className="flex items-start gap-2 text-foreground/80">
-                              <span className="text-primary mt-1">•</span>
-                              {detail}
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="text-foreground/80 leading-relaxed">
-                          {course.details[course.details.length - 1]}
-                        </p>
-                      </>
-                    )}
-
-                    <div>
-                      <h4 className="font-heading text-lg font-semibold text-foreground mb-3">
-                        What Students Should Bring to Class
-                      </h4>
-                      <ul className="space-y-2">
-                        {course.requirements?.map((req) => (
-                          <li key={req} className="flex items-start gap-2 text-foreground/80">
-                            <span className="text-primary mt-1">•</span>
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="mt-4 text-muted-foreground text-sm italic">
-                        {course.rentalNote}
-                      </p>
-                    </div>
-
+                    <CourseDetailsBlock course={course} />
                     {comingSoon ? (
                       <button
                         type="button"
@@ -484,7 +133,7 @@ const ClassesSection = () => {
                     ) : (
                       <button
                         type="button"
-                        onClick={() => openSignup(course, activeSlug, displayPrice)}
+                        onClick={onSignupClick}
                         disabled={seatInfo?.full}
                         className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                       >
