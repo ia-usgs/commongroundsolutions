@@ -76,7 +76,7 @@ export const ClassesManager = ({ classes, signups, onChanged }: Props) => {
                   ({group.items.length})
                 </span>
               </h3>
-              {group.key !== "__unmapped__" && (
+              {(group.key as string) !== "__unmapped__" && (
                 <Button size="sm" variant="outline" onClick={() => handleAdd(group.key, group.label)}>
                   <Plus size={14} className="mr-1" /> Add new date
                 </Button>
