@@ -7,7 +7,7 @@ const HeroSection = () => {
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-no-repeat bg-background"
-        style={{ backgroundImage: `url(${heroBg})`, backgroundPosition: "center 45%" }}
+        style={{ backgroundImage: `url(${heroBg})`, backgroundPosition: "center 35%" }}
       />
       {/* Dark overlay - lighter so more of the image shows */}
       <div className="absolute inset-0 bg-background/40" />
