@@ -6,11 +6,11 @@ const HeroSection = () => {
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-contain md:bg-cover bg-top bg-no-repeat bg-background"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-background/70" />
+      {/* Dark overlay - lighter so more of the image shows */}
+      <div className="absolute inset-0 bg-background/40" />
 
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground animate-fade-in-up">
