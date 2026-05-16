@@ -3,9 +3,9 @@
 
 export type CourseKey =
   | "pistol-performance"
+  | "pistol-performance-2"
   | "baseline-pistol"
   | "defensive-dynamic"
-  | "baseline-rifle"
   | "scope-carbine-1"
   | "scope-carbine-2"
   | "cpr-aed-firstaid";
