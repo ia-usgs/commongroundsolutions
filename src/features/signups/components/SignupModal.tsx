@@ -1,5 +1,10 @@
-// Public reservation form. Validates with zod, inserts a pending signup, then swaps to the
-// confirmation panel with payment instructions.
+// Public reservation form. Three-step flow:
+//   1. Reservation details (name, email, phone, payment method, notes)
+//   2. Liability waiver — must be signed before payment instructions appear
+//   3. Confirmation panel with reference code and Zelle/Venmo instructions
+//
+// On waiver sign, the signup is inserted (RLS requires waiver fields) AND a copy of the signed
+// waiver is emailed via Web3Forms so we have an audit record alongside the database row.
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -15,10 +20,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PAYMENTS } from "@/config/payments";
+import { SITE } from "@/config/site";
 import { createSignup, generateReferenceCode } from "../api";
 import { signupFormSchema } from "../validation";
+import { renderWaiverPlainText, WAIVER_TITLE, WAIVER_VERSION } from "../waiver";
 import type { PaymentMethod, SignupFormData } from "../types";
 import { SignupConfirmation } from "./SignupConfirmation";
+import { WaiverStep, type WaiverData } from "./WaiverStep";
 
 type Props = {
   open: boolean;
@@ -37,24 +45,85 @@ const EMPTY: SignupFormData = {
   notes: "",
 };
 
+type Step = "form" | "waiver" | "confirmation";
+
 export const SignupModal = ({ open, onOpenChange, classId, className, price }: Props) => {
+  const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ refCode: string; method: PaymentMethod } | null>(
     null
   );
   const [form, setForm] = useState<SignupFormData>(EMPTY);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!classId) return;
     const parsed = signupFormSchema.safeParse(form);
     if (!parsed.success) {
       toast.error(parsed.error.errors[0].message);
       return;
     }
+    setStep("waiver");
+  };
+
+  const sendWaiverEmail = async (
+    reference_code: string,
+    parsed: SignupFormData,
+    waiver: WaiverData,
+    signedAtIso: string
+  ) => {
+    const waiverText = renderWaiverPlainText({
+      printedName: waiver.printedName,
+      signatureName: waiver.signatureName,
+      signedAt: new Date(signedAtIso).toLocaleString(),
+      governingState: waiver.governingState,
+      photoConsent: waiver.photoConsent,
+      participantEmail: parsed.email,
+      participantPhone: parsed.phone,
+      className,
+      referenceCode: reference_code,
+    });
+
+    const body = new FormData();
+    body.append("access_key", SITE.web3formsAccessKey);
+    body.append(
+      "subject",
+      `Signed Waiver — ${parsed.first_name} ${parsed.last_name} (${className}) — ${reference_code}`
+    );
+    body.append("from_name", `${parsed.first_name} ${parsed.last_name}`);
+    body.append("replyto", parsed.email);
+    body.append("name", `${parsed.first_name} ${parsed.last_name}`);
+    body.append("email", parsed.email);
+    body.append("phone", parsed.phone);
+    body.append("class", className);
+    body.append("reference_code", reference_code);
+    body.append("waiver_version", WAIVER_VERSION);
+    body.append("waiver_title", WAIVER_TITLE);
+    body.append("printed_name", waiver.printedName);
+    body.append("signature", waiver.signatureName);
+    body.append("governing_state", waiver.governingState);
+    body.append("photo_consent", waiver.photoConsent ? "AGREES" : "DOES NOT AGREE");
+    body.append("signed_at", signedAtIso);
+    body.append("message", waiverText);
+
+    try {
+      await fetch("https://api.web3forms.com/submit", { method: "POST", body });
+    } catch (err) {
+      console.error("Waiver email failed", err);
+    }
+  };
+
+  const handleSign = async (waiver: WaiverData) => {
+    if (!classId) return;
+    const parsed = signupFormSchema.safeParse(form);
+    if (!parsed.success) {
+      toast.error(parsed.error.errors[0].message);
+      setStep("form");
+      return;
+    }
     setSubmitting(true);
     try {
       const reference_code = generateReferenceCode();
+      const signedAt = new Date().toISOString();
       await createSignup({
         class_id: classId,
         first_name: parsed.data.first_name,
@@ -64,8 +133,16 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
         payment_method: parsed.data.payment_method,
         notes: parsed.data.notes || null,
         reference_code,
+        waiver_signed_at: signedAt,
+        waiver_signature_name: waiver.signatureName,
+        waiver_printed_name: waiver.printedName,
+        waiver_governing_state: waiver.governingState,
+        waiver_photo_consent: waiver.photoConsent,
+        waiver_version: WAIVER_VERSION,
       });
+      await sendWaiverEmail(reference_code, form, waiver, signedAt);
       setConfirmation({ refCode: reference_code, method: parsed.data.payment_method });
+      setStep("confirmation");
     } catch (err: any) {
       toast.error(err.message ?? "Signup failed. Please try again.");
     } finally {
@@ -77,6 +154,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     if (!next) {
       setConfirmation(null);
       setForm(EMPTY);
+      setStep("form");
     }
     onOpenChange(next);
   };
@@ -84,7 +162,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-card border-border">
-        {!confirmation ? (
+        {step === "form" && (
           <>
             <DialogHeader>
               <DialogTitle className="font-heading text-2xl tracking-wider text-primary uppercase">
@@ -94,7 +172,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
                 {className} — {price}
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleFormSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="first_name">First name *</Label>
@@ -166,22 +244,43 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
                   placeholder="Anything we should know?"
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? "Reserving..." : "Reserve Seat"}
+              <Button type="submit" className="w-full">
+                Continue to Waiver
               </Button>
               <p className="text-xs text-muted-foreground">
-                Your seat is held for {PAYMENTS.holdHours} hours pending payment confirmation.
+                You'll review and sign a liability waiver on the next step before payment.
               </p>
             </form>
           </>
-        ) : (
+        )}
+
+        {step === "waiver" && (
           <>
             <DialogHeader>
               <DialogTitle className="font-heading text-2xl tracking-wider text-primary uppercase">
-                Seat Reserved
+                Sign Liability Waiver
+              </DialogTitle>
+              <DialogDescription>Required before payment instructions are shown.</DialogDescription>
+            </DialogHeader>
+            <WaiverStep
+              defaultName={`${form.first_name} ${form.last_name}`.trim()}
+              className={className}
+              submitting={submitting}
+              onBack={() => setStep("form")}
+              onSign={handleSign}
+            />
+          </>
+        )}
+
+        {step === "confirmation" && confirmation && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-heading text-2xl tracking-wider text-primary uppercase">
+                Waiver Signed — Complete Payment
               </DialogTitle>
               <DialogDescription>
-                Send your payment within {PAYMENTS.holdHours} hours to confirm your spot.
+                A copy of your signed waiver has been emailed. Send payment within{" "}
+                {PAYMENTS.holdHours} hours to confirm your seat.
               </DialogDescription>
             </DialogHeader>
             <SignupConfirmation
