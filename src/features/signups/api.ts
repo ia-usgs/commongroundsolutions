@@ -18,6 +18,12 @@ export type CreateSignupInput = {
   payment_method: PaymentMethod;
   notes?: string | null;
   reference_code: string;
+  waiver_signed_at: string;
+  waiver_signature_name: string;
+  waiver_printed_name: string;
+  waiver_governing_state: string;
+  waiver_photo_consent: boolean;
+  waiver_version: string;
 };
 
 export const createSignup = async (input: CreateSignupInput) => {
