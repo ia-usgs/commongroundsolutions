@@ -4,7 +4,7 @@
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
-import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
+
 import classDefensive from "@/assets/class-defensive.jpg";
 import cprFlyer from "@/assets/cpr-certification.png";
 import type { Course, CourseKey } from "@/features/courses/types";
@@ -203,6 +203,7 @@ export const COURSE_CATALOG: Course[] = [
     courseKey: "scope-carbine-2",
     title: "American Rifleman II",
     image: classCarbine,
+
     fallbackPrice: "$375",
     fallbackLevel: "Intermediate",
     forceComingSoon: true,
