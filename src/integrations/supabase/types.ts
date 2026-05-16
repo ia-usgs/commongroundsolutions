@@ -85,6 +85,12 @@ export type Database = {
           reference_code: string
           status: Database["public"]["Enums"]["signup_status"]
           updated_at: string
+          waiver_governing_state: string | null
+          waiver_photo_consent: boolean | null
+          waiver_printed_name: string | null
+          waiver_signature_name: string | null
+          waiver_signed_at: string | null
+          waiver_version: string | null
         }
         Insert: {
           calendar_event_id?: string | null
@@ -102,6 +108,12 @@ export type Database = {
           reference_code: string
           status?: Database["public"]["Enums"]["signup_status"]
           updated_at?: string
+          waiver_governing_state?: string | null
+          waiver_photo_consent?: boolean | null
+          waiver_printed_name?: string | null
+          waiver_signature_name?: string | null
+          waiver_signed_at?: string | null
+          waiver_version?: string | null
         }
         Update: {
           calendar_event_id?: string | null
@@ -119,6 +131,12 @@ export type Database = {
           reference_code?: string
           status?: Database["public"]["Enums"]["signup_status"]
           updated_at?: string
+          waiver_governing_state?: string | null
+          waiver_photo_consent?: boolean | null
+          waiver_printed_name?: string | null
+          waiver_signature_name?: string | null
+          waiver_signed_at?: string | null
+          waiver_version?: string | null
         }
         Relationships: [
           {
