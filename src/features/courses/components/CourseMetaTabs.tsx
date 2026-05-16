@@ -79,18 +79,10 @@ export const CourseMetaTabs = ({
       <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
         <MapPin size={14} /> {displayLocation}
       </span>
-      {seatInfo && (
-        <span
-          className={`flex items-center gap-1 px-3 py-1 ${
-            seatInfo.full
-              ? "bg-destructive/20 text-destructive"
-              : seatInfo.remaining <= 3
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-secondary-foreground"
-          }`}
-        >
+      {seatInfo?.full && (
+        <span className="flex items-center gap-1 px-3 py-1 bg-destructive/20 text-destructive">
           <Users size={14} />
-          {seatInfo.full ? "Class Full" : `${seatInfo.remaining} of ${seatInfo.capacity} left`}
+          Class Full
         </span>
       )}
     </div>

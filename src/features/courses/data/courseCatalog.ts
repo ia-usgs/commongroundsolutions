@@ -3,7 +3,6 @@
 // scheduled date/time/price/seat info on the public site.
 import classPistol from "@/assets/class-pistol.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
-import classRifleFundamental from "@/assets/rifle-fundamental.png";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine1 from "@/assets/class-scoped-carbine-1.jpg";
 import classDefensive from "@/assets/class-defensive.jpg";
@@ -22,6 +21,41 @@ export const COURSE_CATALOG: Course[] = [
     fallbackLevel: "All Levels",
     description:
       "For individuals seeking to develop safe, effective, and responsible firearm skills, our professional instruction is tailored to both new shooters and experienced firearm owners looking to elevate their performance in a structured, safety-focused environment.",
+    details: [
+      "All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.",
+      "Each course emphasizes safety, accountability, and real-world application, while delivering clear, step-by-step coaching to build confidence and competence at every level.",
+      "Advanced grip and recoil management",
+      "Accuracy and consistency drills",
+      "Efficient draw and presentation",
+      "Target transitions",
+      "Attack and control",
+      "Speed vs. precision balance",
+      "Performance-based shooting drills / Competition style stages",
+      "This course focuses on developing speed, accuracy, and efficiency under structured drills.",
+    ],
+    requirements: [
+      "Reliable Pistol",
+      "500 round count",
+      "At least two magazines",
+      "Magazine carriers",
+      "OWB (Outside the waistband) or IWB (Inside the waistband) Holster (no nylon holsters permitted)",
+      "Reliable and sturdy EDC (everyday carry) belt",
+      "Eye and ear protection",
+      "Appropriate clothing for range (pants, shirt, closed-toe shoes)",
+      "Weapons maintenance & cleaning equipment",
+      "Water and snacks",
+      "Chair",
+    ],
+    rentalNote: RENTAL_NOTE,
+  },
+  {
+    courseKey: "pistol-performance-2",
+    title: "Pistol Performance II",
+    image: classPistol,
+    fallbackPrice: "$260",
+    fallbackLevel: "Intermediate / Advanced",
+    description:
+      "Pistol Performance II is the next step for shooters who have a solid grasp of the fundamentals and are ready to push their speed, accuracy, and efficiency under more demanding conditions. This course builds directly on Pistol Performance, refining technique and exposing weaknesses through advanced drills and performance-based stages.",
     details: [
       "All courses are led by an instructor who is both NRA-certified and P.O.S.T.-certified, ensuring a high standard of training grounded in proven methodology and professional experience.",
       "Each course emphasizes safety, accountability, and real-world application, while delivering clear, step-by-step coaching to build confidence and competence at every level.",
@@ -129,50 +163,9 @@ export const COURSE_CATALOG: Course[] = [
     rentalNote: RENTAL_NOTE,
   },
   {
-    courseKey: "baseline-rifle",
-    title: "Baseline Rifle",
-    image: classRifleFundamental,
-    fallbackPrice: "$225",
-    fallbackLevel: "All Levels",
-    description:
-      "The Baseline Rifle Course is built to develop shooters who understand why they perform the way they do—not just how to send rounds downrange. Whether you're new to the rifle platform or looking to refine your performance, this course focuses on building a dependable foundation that holds up under pressure.",
-    details: [
-      "At CGS, we don't chase gimmicks or trends. We focus on the fundamentals that actually drive performance—then teach you how to diagnose and correct your own shooting.",
-      "In this course, you'll develop:",
-      "A strong foundation in rifle marksmanship principles",
-      "The ability to isolate and correct fundamental errors",
-      "Working knowledge of rifle conditions and cycle of operations",
-      "Efficient shooting positions for stability and control",
-      "Understanding of mechanical offset and practical application",
-      "Immediate and remedial action for common malfunctions",
-      "Optic setup considerations and back-up sight integration",
-      "Strong-side and support-side shooting capability",
-      "Effective reloads and weapon manipulations",
-      "Sling use for control, support, and transitions",
-      "Movement techniques during engagements",
-      "Shooting from cover and positional awareness",
-      "Engagement techniques for close to mid-range distances",
-      "This course is designed to give you a repeatable process—so you're not relying on luck or guesswork. You'll leave with the tools to train with purpose, track your progress, and continue improving long after the course ends.",
-    ],
-    requirements: [
-      "Rifle",
-      "500 rounds of rifle ammunition",
-      "Rifle sling",
-      "At least 3 rifle magazines",
-      "Belt / Chest Rig",
-      "At least 1 magazine holder for rifle magazines",
-      "Ear & Eye Protection",
-      "Permanent Marker",
-      "Appropriate clothing for terrain and weather",
-      "Weapons maintenance & cleaning equipment",
-      "Food & Water",
-    ],
-    rentalNote: RENTAL_NOTE,
-  },
-  {
     courseKey: "scope-carbine-1",
-    title: "Scope Carbine I",
-    image: classCarbine1,
+    title: "American Rifleman I",
+    image: classCarbine,
     fallbackPrice: "$350",
     fallbackLevel: "All Levels",
     forceComingSoon: true,
@@ -208,7 +201,7 @@ export const COURSE_CATALOG: Course[] = [
   },
   {
     courseKey: "scope-carbine-2",
-    title: "Scope Carbine II",
+    title: "American Rifleman II",
     image: classCarbine,
     fallbackPrice: "$375",
     fallbackLevel: "Intermediate",
@@ -268,10 +261,10 @@ export const CPR_COURSE: Course = {
 // Mirrors COURSE_CATALOG plus the CPR row, in the order admins want to see them.
 export const COURSE_GROUPS: { key: CourseKey; label: string }[] = [
   { key: "pistol-performance", label: "Pistol Performance" },
+  { key: "pistol-performance-2", label: "Pistol Performance II" },
   { key: "baseline-pistol", label: "Baseline Pistol Course" },
   { key: "defensive-dynamic", label: "Defensive Dynamic Performance" },
-  { key: "baseline-rifle", label: "Baseline Rifle" },
-  { key: "scope-carbine-1", label: "Scope Carbine I" },
-  { key: "scope-carbine-2", label: "Scope Carbine II" },
+  { key: "scope-carbine-1", label: "American Rifleman I" },
+  { key: "scope-carbine-2", label: "American Rifleman II" },
   { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
 ];
