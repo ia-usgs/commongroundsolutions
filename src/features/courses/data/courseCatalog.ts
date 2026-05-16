@@ -204,7 +204,7 @@ export const COURSE_CATALOG: Course[] = [
   {
     courseKey: "scope-carbine-2",
     title: "American Rifleman II",
-    image: classCarbine,
+    image: classCarbine2,
 
     fallbackPrice: "$375",
     fallbackLevel: "Intermediate",
