@@ -140,7 +140,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
         waiver_photo_consent: waiver.photoConsent,
         waiver_version: WAIVER_VERSION,
       });
-      await sendWaiverEmail(reference_code, parsed.data, waiver, signedAt);
+      await sendWaiverEmail(reference_code, form, waiver, signedAt);
       setConfirmation({ refCode: reference_code, method: parsed.data.payment_method });
       setStep("confirmation");
     } catch (err: any) {
