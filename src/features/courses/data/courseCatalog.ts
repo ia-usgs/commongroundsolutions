@@ -2,6 +2,7 @@
 // `courseKey` matches the `course_key` column on the DB `classes` table — that link drives
 // scheduled date/time/price/seat info on the public site.
 import classPistol from "@/assets/class-pistol.jpg";
+import classPistolPerformance2 from "@/assets/class-pistol-performance-2.jpg";
 import classPistolFundamental from "@/assets/class-pistol-fundamental.jpg";
 import classCarbine from "@/assets/class-scoped-carbine.jpg";
 
