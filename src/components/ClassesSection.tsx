@@ -125,10 +125,15 @@ const ClassesSection = () => {
                     {comingSoon ? (
                       <button
                         type="button"
-                        disabled
-                        className="inline-block font-heading text-sm tracking-widest bg-secondary text-secondary-foreground px-8 py-3 uppercase opacity-70 cursor-not-allowed"
+                        onClick={() => {
+                          window.location.hash = `contact?reserve=${course.courseKey}`;
+                          setTimeout(() => {
+                            document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                          }, 0);
+                        }}
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
                       >
-                        Coming Soon
+                        Reserve Your Spot
                       </button>
                     ) : (
                       <button
