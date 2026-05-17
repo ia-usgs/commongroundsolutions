@@ -1,11 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { SITE } from "@/config/site";
 
+const RESERVE_COURSE_MAP: Record<string, string> = {
+  "scope-carbine-1": "American Rifleman I — Reserve Spot",
+  "scope-carbine-2": "American Rifleman II — Reserve Spot",
+};
+
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      const [, query] = hash.split("?");
+      if (!query) return;
+      const params = new URLSearchParams(query);
+      const reserveKey = params.get("reserve");
+      if (reserveKey && RESERVE_COURSE_MAP[reserveKey]) {
+        const courseValue = RESERVE_COURSE_MAP[reserveKey];
+        const courseTitle = courseValue.replace(" — Reserve Spot", "");
+        setFormData((prev) => ({
+          ...prev,
+          course: courseValue,
+          message:
+            prev.message ||
+            `I'd like to reserve a spot for ${courseTitle}. Please notify me as soon as a date is announced.`,
+        }));
+      }
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +139,8 @@ const ContactSection = () => {
               <option value="Baseline Pistol Course">Baseline Pistol Course (May 24th)</option>
               <option value="Defensive Dynamic Performance">Defensive Dynamic Performance (TBA)</option>
               <option value="Pistol Performance II">Pistol Performance II</option>
-              <option value="Scoped Carbine">Scoped Carbine (Coming Soon)</option>
+              <option value="American Rifleman I — Reserve Spot">American Rifleman I — Reserve Spot</option>
+              <option value="American Rifleman II — Reserve Spot">American Rifleman II — Reserve Spot</option>
               <option value="CPR / AED / First Aid">CPR / AED / First Aid ($90)</option>
               <option value="Private Lesson">Private Lesson</option>
               <option value="Other">Other / General Inquiry</option>
