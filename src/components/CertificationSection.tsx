@@ -15,7 +15,8 @@ const CertificationSection = () => {
     classId: string | null;
     className: string;
     price: string;
-  }>({ open: false, classId: null, className: "", price: "" });
+    priceCents: number;
+  }>({ open: false, classId: null, className: "", price: "", priceCents: 0 });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
   const instances = getClassesByCourseKey(CPR_COURSE.courseKey);
@@ -48,6 +49,7 @@ const CertificationSection = () => {
       classId: cls.id,
       className: CPR_COURSE.title,
       price: displayPrice,
+      priceCents: cls.price_cents ?? 0,
     });
   };
 
@@ -141,6 +143,7 @@ const CertificationSection = () => {
         classId={modalState.classId}
         className={modalState.className}
         price={modalState.price}
+        priceCents={modalState.priceCents}
       />
     </section>
   );
