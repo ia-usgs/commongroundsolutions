@@ -6,15 +6,27 @@ import { PAYMENTS } from "@/config/payments";
 import { SITE } from "@/config/site";
 import venmoQr from "@/assets/venmo-qr.png";
 import type { PaymentMethod } from "../types";
+import { formatCents, formatDiscountLabel, type DiscountInfo } from "../discounts";
 
 type Props = {
   refCode: string;
   method: PaymentMethod;
-  price: string;
+  originalPrice: string;
+  originalPriceCents: number;
+  finalPriceCents: number;
+  discount: DiscountInfo | null;
   onDone: () => void;
 };
 
-export const SignupConfirmation = ({ refCode, method, price, onDone }: Props) => {
+export const SignupConfirmation = ({
+  refCode,
+  method,
+  originalPrice,
+  originalPriceCents,
+  finalPriceCents,
+  discount,
+  onDone,
+}: Props) => {
   const [copied, setCopied] = useState(false);
 
   const copyRef = () => {
@@ -22,6 +34,9 @@ export const SignupConfirmation = ({ refCode, method, price, onDone }: Props) =>
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const showDiscount = discount && originalPriceCents > 0;
+  const finalLabel = originalPriceCents > 0 ? formatCents(finalPriceCents) : originalPrice;
 
   return (
     <div className="space-y-5">
@@ -42,8 +57,22 @@ export const SignupConfirmation = ({ refCode, method, price, onDone }: Props) =>
       </div>
 
       <div className="border border-border p-4 space-y-3">
+        {showDiscount && (
+          <div className="space-y-1 pb-3 border-b border-border">
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Original price</span>
+              <span className="line-through">{formatCents(originalPriceCents)}</span>
+            </div>
+            <div className="flex justify-between text-sm text-primary">
+              <span>
+                Discount ({discount!.code})
+              </span>
+              <span>−{formatDiscountLabel(discount!)}</span>
+            </div>
+          </div>
+        )}
         <p className="font-heading uppercase tracking-widest text-sm text-primary">
-          Amount to send: {price}
+          Amount to send: {finalLabel}
         </p>
         {method === "zelle" ? (
           <div>

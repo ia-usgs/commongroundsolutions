@@ -1,35 +1,94 @@
-# Plan: Reserve Spot for Coming Soon Courses
+# Discount Codes — Implementation Plan
 
-## Goal
-For courses with no scheduled date yet (currently American Rifleman I & II), replace the disabled "Coming Soon" button with an active **"Reserve Your Spot"** button. Clicking it scrolls to the Contact Us section and pre-fills the course dropdown + a starter message so CGS gets an email with the reservation interest.
+## Overview
 
-## Scope
-Frontend only. No DB changes. Uses existing Web3Forms contact form to capture the lead.
+Add a discount system to the signup flow with three sources of discounts:
 
-## Changes
+1. **Admin-managed promo codes** (Military, LEO, custom) — created in admin dashboard, manually approved/issued per request
+2. **Auto-detected returning customer** — if email has a prior confirmed signup, discount auto-applies
+3. **Default for now**: 20% off (configurable per code by admin)
 
-### 1. `src/components/ContactSection.tsx`
-- Add new course options to the `<select>`:
-  - "American Rifleman I — Reserve Spot"
-  - "American Rifleman II — Reserve Spot"
-- Listen for a custom URL hash or query param (e.g. `#contact?reserve=scope-carbine-1`) OR accept a global event so the form can pre-select the course and prefill the message with: *"I'd like to reserve a spot for {Course Title}. Please notify me as soon as a date is announced."*
-- Simplest approach: read `window.location.hash` on mount and parse a `reserve` param.
+Discount is applied to the price shown on the confirmation screen, recorded on the signup row, and emailed in the waiver receipt so admin sees the expected payment amount.
 
-### 2. `src/components/ClassesSection.tsx`
-- When `comingSoon` is true, render a **"Reserve Your Spot"** button (primary style, not disabled) instead of the disabled "Coming Soon" button.
-- onClick: set `window.location.hash` to `#contact?reserve={courseKey}` and smooth-scroll to `#contact`.
-- Keep the "Coming Soon" overlay badge on the image so users still see it's not yet scheduled.
+## User Flow
 
-### 3. Course title mapping
-- Small helper to map `courseKey` → contact form option value (e.g. `scope-carbine-1` → `"American Rifleman I"`) so the dropdown selects correctly and the email subject reads cleanly.
+```text
+[Form] → enters info + optional promo code  → validates code live
+              ↓                                ↓ shows "20% off applied"
+              ↓                                ↓ (or auto-applies returning discount)
+        [Waiver] → sign
+              ↓
+        [Confirmation] → shows ORIGINAL price struck through + DISCOUNTED price
+                       → Zelle/Venmo instructions reflect new amount
+                       → reference code + discount info emailed
+```
 
-## Email behavior
-- Web3Forms already sends submissions to CGS inbox. The subject line will become e.g. *"New Website Inquiry from John Doe (American Rifleman I — Reserve Spot)"* — gives admin a clean list of interested reservers per course.
+**Returning customer manual request flow:** The Contact section already has a course select. We'll add a "Request Military / LEO / Returning Discount Code" option that prefills a request template. Admin replies with a code created in the dashboard.
 
-## Out of scope
-- No new database table for reservations (admin tracks via inbox).
-- No automated "first dibs" email blast when date is set — admin replies manually from inbox for now. Can add later if wanted.
+## Database Changes
 
-## Files touched
-- `src/components/ClassesSection.tsx` — swap disabled button for Reserve button
-- `src/components/ContactSection.tsx` — add reserve options + hash param prefill logic
+**New table `discount_codes`:**
+- `code` (text, unique, uppercase) — e.g. `MILITARY-J7K2`
+- `label` (text) — internal note, e.g. "Military — John Doe"
+- `discount_type` (enum: `percent` | `fixed`) — default `percent`
+- `discount_value` (int) — percent (1–100) or cents
+- `category` (enum: `military` | `leo` | `returning` | `custom`) — for reporting
+- `max_uses` (int, nullable) — null = unlimited
+- `used_count` (int, default 0)
+- `expires_at` (timestamptz, nullable)
+- `active` (boolean, default true)
+
+RLS:
+- Admins: full manage
+- Public: no direct select — validation goes through a `validate_discount_code(code text, email text)` SECURITY DEFINER function that returns `{ valid, discount_type, discount_value, reason }` without exposing the table
+
+**`signups` table — new columns:**
+- `discount_code` (text, nullable)
+- `discount_type` (text, nullable)
+- `discount_value` (int, nullable)
+- `original_price_cents` (int, nullable)
+- `final_price_cents` (int, nullable)
+- `is_returning_customer` (boolean, default false)
+
+**New DB function `check_returning_customer(email text)`** — SECURITY DEFINER, returns boolean: true if email has a prior `confirmed` signup. Public-callable via RPC.
+
+## Code Changes
+
+**Signup form (`SignupModal.tsx`):**
+- Add optional "Promo code" input + "Apply" button below payment method
+- On Apply → call `validate_discount_code` RPC; show ✓ with discount or ✗ with reason
+- On email blur → call `check_returning_customer` RPC; if true and no promo entered, auto-apply 20% returning discount with a "Welcome back!" badge
+- Promo code wins over returning-customer auto-discount (no stacking)
+- Pass final discount info into `createSignup` and the confirmation screen
+
+**Confirmation (`SignupConfirmation.tsx`):**
+- Show original price (struck through) + final price
+- Show "Discount: 20% off (MILITARY-XXXX)" line
+
+**Waiver email payload:** add discount code, original price, final price so admin knows exact amount to expect.
+
+**Admin dashboard — new "Discount Codes" page:**
+- Table of codes with category, value, uses, expiry, active toggle
+- "Create code" modal: category, label, type, value, max uses, expiry
+- Quick "Generate code" button that auto-creates `{CATEGORY}-{4 random chars}` (e.g. `LEO-K7P3`)
+- Delete / deactivate actions
+
+**Contact form (`ContactSection.tsx`):** Add option "Request discount code (Military / LEO)" that prefills:
+> "I'm a [Military / Law Enforcement] member and would like to request a discount code for [course name]. Service branch / agency: ___"
+
+## Out of Scope
+
+- Auto-emailing the code to requester (admin replies manually)
+- Stacking discounts
+- Per-course discount restrictions (codes apply to any class for now)
+- Stripe / online payment integration
+
+## Files to Touch
+
+- `supabase/migrations/...` — new table, signups columns, two RPC functions
+- `src/features/signups/api.ts` — discount validation, createSignup signature, returning check
+- `src/features/signups/components/SignupModal.tsx` — promo input + auto-detect logic
+- `src/features/signups/components/SignupConfirmation.tsx` — show discount breakdown
+- `src/features/signups/types.ts` — discount fields
+- `src/components/ContactSection.tsx` — "Request discount code" option
+- `src/features/admin/...` — new Discount Codes admin page + nav link

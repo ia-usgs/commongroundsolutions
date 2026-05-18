@@ -130,7 +130,20 @@ const ContactSection = () => {
             />
             <select
               value={formData.course}
-              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+              onChange={(e) => {
+                const next = e.target.value;
+                setFormData((prev) => {
+                  const isDiscount = next === "Discount Code Request";
+                  return {
+                    ...prev,
+                    course: next,
+                    message:
+                      isDiscount && !prev.message
+                        ? "I'd like to request a discount code. Category (Military / Law Enforcement / Returning student): ___\nService branch or agency (if applicable): ___\nCourse I'm interested in: ___"
+                        : prev.message,
+                  };
+                });
+              }}
               className="w-full bg-card border border-border px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
@@ -143,6 +156,7 @@ const ContactSection = () => {
               <option value="American Rifleman II — Reserve Spot">American Rifleman II — Reserve Spot</option>
               <option value="CPR / AED / First Aid">CPR / AED / First Aid ($90)</option>
               <option value="Private Lesson">Private Lesson</option>
+              <option value="Discount Code Request">Request Discount Code (Military / LEO / Returning)</option>
               <option value="Other">Other / General Inquiry</option>
             </select>
             <textarea
