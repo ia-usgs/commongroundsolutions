@@ -68,18 +68,69 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_codes: {
+        Row: {
+          active: boolean
+          category: Database["public"]["Enums"]["discount_category"]
+          code: string
+          created_at: string
+          discount_type: Database["public"]["Enums"]["discount_type"]
+          discount_value: number
+          expires_at: string | null
+          id: string
+          label: string | null
+          max_uses: number | null
+          updated_at: string
+          used_count: number
+        }
+        Insert: {
+          active?: boolean
+          category?: Database["public"]["Enums"]["discount_category"]
+          code: string
+          created_at?: string
+          discount_type?: Database["public"]["Enums"]["discount_type"]
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          max_uses?: number | null
+          updated_at?: string
+          used_count?: number
+        }
+        Update: {
+          active?: boolean
+          category?: Database["public"]["Enums"]["discount_category"]
+          code?: string
+          created_at?: string
+          discount_type?: Database["public"]["Enums"]["discount_type"]
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          max_uses?: number | null
+          updated_at?: string
+          used_count?: number
+        }
+        Relationships: []
+      }
       signups: {
         Row: {
           calendar_event_id: string | null
           class_id: string
           confirmed_at: string | null
           created_at: string
+          discount_code: string | null
+          discount_type: string | null
+          discount_value: number | null
           email: string
           expires_at: string
+          final_price_cents: number | null
           first_name: string
           id: string
+          is_returning_customer: boolean
           last_name: string
           notes: string | null
+          original_price_cents: number | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           phone: string | null
           reference_code: string
@@ -97,12 +148,18 @@ export type Database = {
           class_id: string
           confirmed_at?: string | null
           created_at?: string
+          discount_code?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
           email: string
           expires_at?: string
+          final_price_cents?: number | null
           first_name: string
           id?: string
+          is_returning_customer?: boolean
           last_name: string
           notes?: string | null
+          original_price_cents?: number | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           phone?: string | null
           reference_code: string
@@ -120,12 +177,18 @@ export type Database = {
           class_id?: string
           confirmed_at?: string | null
           created_at?: string
+          discount_code?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
           email?: string
           expires_at?: string
+          final_price_cents?: number | null
           first_name?: string
           id?: string
+          is_returning_customer?: boolean
           last_name?: string
           notes?: string | null
+          original_price_cents?: number | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           phone?: string | null
           reference_code?: string
@@ -174,6 +237,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_returning_customer: { Args: { _email: string }; Returns: boolean }
       get_class_seat_counts: {
         Args: never
         Returns: {
@@ -189,9 +253,22 @@ export type Database = {
         }
         Returns: boolean
       }
+      validate_discount_code: {
+        Args: { _code: string }
+        Returns: {
+          category: string
+          code: string
+          discount_type: string
+          discount_value: number
+          reason: string
+          valid: boolean
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"
+      discount_category: "military" | "leo" | "returning" | "custom"
+      discount_type: "percent" | "fixed"
       payment_method: "zelle" | "venmo"
       signup_status: "pending" | "confirmed" | "cancelled" | "expired"
     }
@@ -322,6 +399,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      discount_category: ["military", "leo", "returning", "custom"],
+      discount_type: ["percent", "fixed"],
       payment_method: ["zelle", "venmo"],
       signup_status: ["pending", "confirmed", "cancelled", "expired"],
     },
