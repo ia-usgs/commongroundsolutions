@@ -143,6 +143,7 @@ const ContactSection = () => {
               <option value="American Rifleman II — Reserve Spot">American Rifleman II — Reserve Spot</option>
               <option value="CPR / AED / First Aid">CPR / AED / First Aid ($90)</option>
               <option value="Private Lesson">Private Lesson</option>
+              <option value="Discount Code Request">Request Discount Code (Military / LEO / Returning)</option>
               <option value="Other">Other / General Inquiry</option>
             </select>
             <textarea
