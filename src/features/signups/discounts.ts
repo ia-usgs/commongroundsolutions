@@ -22,7 +22,7 @@ export const validateDiscountCode = async (code: string): Promise<ValidateResult
     discount: {
       code: row.code,
       category: row.category,
-      discount_type: row.discount_type,
+      discount_type: row.discount_type as "percent" | "fixed",
       discount_value: row.discount_value,
     },
   };
