@@ -1,12 +1,10 @@
 // Public reservation form. Three-step flow:
-//   1. Reservation details (name, email, phone, payment method, notes)
+//   1. Reservation details (name, email, phone, payment method, promo code, notes)
 //   2. Liability waiver — must be signed before payment instructions appear
-//   3. Confirmation panel with reference code and Zelle/Venmo instructions
-//
-// On waiver sign, the signup is inserted (RLS requires waiver fields) AND a copy of the signed
-// waiver is emailed via Web3Forms so we have an audit record alongside the database row.
-import { useState } from "react";
+//   3. Confirmation panel with reference code and Zelle/Venmo instructions (discounted price)
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BadgeCheck, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +20,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PAYMENTS } from "@/config/payments";
 import { SITE } from "@/config/site";
 import { createSignup, generateReferenceCode } from "../api";
+import {
+  applyDiscountToCents,
+  checkReturningCustomer,
+  formatCents,
+  formatDiscountLabel,
+  validateDiscountCode,
+  type DiscountInfo,
+} from "../discounts";
 import { signupFormSchema } from "../validation";
 import { renderWaiverPlainText, WAIVER_TITLE, WAIVER_VERSION } from "../waiver";
 import type { PaymentMethod, SignupFormData } from "../types";
@@ -34,6 +40,7 @@ type Props = {
   classId: string | null;
   className: string;
   price: string;
+  priceCents: number;
 };
 
 const EMPTY: SignupFormData = {
@@ -47,13 +54,57 @@ const EMPTY: SignupFormData = {
 
 type Step = "form" | "waiver" | "confirmation";
 
-export const SignupModal = ({ open, onOpenChange, classId, className, price }: Props) => {
+export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents }: Props) => {
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
-  const [confirmation, setConfirmation] = useState<{ refCode: string; method: PaymentMethod } | null>(
-    null
-  );
   const [form, setForm] = useState<SignupFormData>(EMPTY);
+  const [promoInput, setPromoInput] = useState("");
+  const [discount, setDiscount] = useState<DiscountInfo | null>(null);
+  const [discountSource, setDiscountSource] = useState<"code" | "returning" | null>(null);
+  const [validatingCode, setValidatingCode] = useState(false);
+  const [confirmation, setConfirmation] = useState<{
+    refCode: string;
+    method: PaymentMethod;
+    finalCents: number;
+    discount: DiscountInfo | null;
+  } | null>(null);
+
+  const finalCents = discount && priceCents > 0 ? applyDiscountToCents(priceCents, discount) : priceCents;
+
+  // Auto-detect returning customer on email blur (only when no manual code applied)
+  const handleEmailBlur = async () => {
+    if (discountSource === "code") return;
+    if (!form.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return;
+    const isReturning = await checkReturningCustomer(form.email);
+    if (isReturning) {
+      const result = await validateDiscountCode("RETURNING");
+      if (result.valid) {
+        setDiscount(result.discount);
+        setDiscountSource("returning");
+        toast.success("Welcome back! Returning customer discount applied.");
+      }
+    }
+  };
+
+  const applyPromoCode = async () => {
+    if (!promoInput.trim()) return;
+    setValidatingCode(true);
+    const result = await validateDiscountCode(promoInput.trim());
+    setValidatingCode(false);
+    if (!result.valid) {
+      toast.error(result.reason);
+      return;
+    }
+    setDiscount(result.discount);
+    setDiscountSource("code");
+    toast.success(`${formatDiscountLabel(result.discount)} applied.`);
+  };
+
+  const clearDiscount = () => {
+    setDiscount(null);
+    setDiscountSource(null);
+    setPromoInput("");
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +120,10 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     reference_code: string,
     parsed: SignupFormData,
     waiver: WaiverData,
-    signedAtIso: string
+    signedAtIso: string,
+    finalAmountCents: number,
+    appliedDiscount: DiscountInfo | null,
+    isReturning: boolean
   ) => {
     const waiverText = renderWaiverPlainText({
       printedName: waiver.printedName,
@@ -82,6 +136,14 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
       className,
       referenceCode: reference_code,
     });
+
+    const discountSummary = appliedDiscount
+      ? `${appliedDiscount.code} (${formatDiscountLabel(appliedDiscount)})${isReturning ? " — auto: returning customer" : ""}`
+      : "None";
+    const priceSummary =
+      priceCents > 0
+        ? `Original: ${formatCents(priceCents)} | Discount: ${discountSummary} | Final: ${formatCents(finalAmountCents)}`
+        : `Price: ${price} | Discount: ${discountSummary}`;
 
     const body = new FormData();
     body.append("access_key", SITE.web3formsAccessKey);
@@ -96,6 +158,9 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     body.append("phone", parsed.phone);
     body.append("class", className);
     body.append("reference_code", reference_code);
+    body.append("pricing", priceSummary);
+    body.append("discount_code", appliedDiscount?.code ?? "");
+    body.append("final_amount", priceCents > 0 ? formatCents(finalAmountCents) : price);
     body.append("waiver_version", WAIVER_VERSION);
     body.append("waiver_title", WAIVER_TITLE);
     body.append("printed_name", waiver.printedName);
@@ -103,7 +168,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     body.append("governing_state", waiver.governingState);
     body.append("photo_consent", waiver.photoConsent ? "AGREES" : "DOES NOT AGREE");
     body.append("signed_at", signedAtIso);
-    body.append("message", waiverText);
+    body.append("message", `${priceSummary}\n\n${waiverText}`);
 
     try {
       await fetch("https://api.web3forms.com/submit", { method: "POST", body });
@@ -124,6 +189,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     try {
       const reference_code = generateReferenceCode();
       const signedAt = new Date().toISOString();
+      const isReturning = discountSource === "returning";
       await createSignup({
         class_id: classId,
         first_name: parsed.data.first_name,
@@ -139,9 +205,20 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
         waiver_governing_state: waiver.governingState,
         waiver_photo_consent: waiver.photoConsent,
         waiver_version: WAIVER_VERSION,
+        discount_code: discount?.code ?? null,
+        discount_type: discount?.discount_type ?? null,
+        discount_value: discount?.discount_value ?? null,
+        original_price_cents: priceCents > 0 ? priceCents : null,
+        final_price_cents: priceCents > 0 ? finalCents : null,
+        is_returning_customer: isReturning,
       });
-      await sendWaiverEmail(reference_code, form, waiver, signedAt);
-      setConfirmation({ refCode: reference_code, method: parsed.data.payment_method });
+      await sendWaiverEmail(reference_code, form, waiver, signedAt, finalCents, discount, isReturning);
+      setConfirmation({
+        refCode: reference_code,
+        method: parsed.data.payment_method,
+        finalCents,
+        discount,
+      });
       setStep("confirmation");
     } catch (err: any) {
       toast.error(err.message ?? "Signup failed. Please try again.");
@@ -154,10 +231,21 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
     if (!next) {
       setConfirmation(null);
       setForm(EMPTY);
+      setPromoInput("");
+      setDiscount(null);
+      setDiscountSource(null);
       setStep("form");
     }
     onOpenChange(next);
   };
+
+  // Reset state when reopened with a different class
+  useEffect(() => {
+    if (!open) return;
+    setPromoInput("");
+    setDiscount(null);
+    setDiscountSource(null);
+  }, [open, classId]);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -169,7 +257,15 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
                 Reserve Your Seat
               </DialogTitle>
               <DialogDescription>
-                {className} — {price}
+                {className} —{" "}
+                {discount && priceCents > 0 ? (
+                  <>
+                    <span className="line-through text-muted-foreground">{price}</span>{" "}
+                    <span className="text-primary font-semibold">{formatCents(finalCents)}</span>
+                  </>
+                ) : (
+                  price
+                )}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -200,6 +296,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onBlur={handleEmailBlur}
                   required
                 />
               </div>
@@ -234,6 +331,52 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
                   </div>
                 </RadioGroup>
               </div>
+
+              {/* Promo code */}
+              <div>
+                <Label htmlFor="promo">Promo / Discount Code (optional)</Label>
+                {discount ? (
+                  <div className="mt-1 flex items-center justify-between gap-2 border border-primary/50 bg-primary/10 px-3 py-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <BadgeCheck size={16} className="text-primary" />
+                      <span className="font-mono font-semibold text-primary">{discount.code}</span>
+                      <span className="text-muted-foreground">
+                        — {formatDiscountLabel(discount)}
+                        {discountSource === "returning" && " (returning customer)"}
+                      </span>
+                    </div>
+                    <Button type="button" size="sm" variant="ghost" onClick={clearDiscount}>
+                      Remove
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="mt-1 flex gap-2">
+                    <Input
+                      id="promo"
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                      placeholder="MILITARY, LEO, etc."
+                      className="font-mono uppercase"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={applyPromoCode}
+                      disabled={!promoInput.trim() || validatingCode}
+                    >
+                      {validatingCode ? <Loader2 size={16} className="animate-spin" /> : "Apply"}
+                    </Button>
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground mt-1">
+                  Military, law enforcement, and returning students — request a code via{" "}
+                  <a href="#contact" className="underline">
+                    Contact Us
+                  </a>
+                  .
+                </p>
+              </div>
+
               <div>
                 <Label htmlFor="notes">Notes (optional)</Label>
                 <Textarea
@@ -286,7 +429,10 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price }: P
             <SignupConfirmation
               refCode={confirmation.refCode}
               method={confirmation.method}
-              price={price}
+              originalPrice={price}
+              originalPriceCents={priceCents}
+              finalPriceCents={confirmation.finalCents}
+              discount={confirmation.discount}
               onDone={() => handleClose(false)}
             />
           </>
