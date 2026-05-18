@@ -9,8 +9,8 @@ export type DiscountInfo = {
 };
 
 export type ValidateResult =
-  | { valid: true; discount: DiscountInfo }
-  | { valid: false; reason: string };
+  | { valid: true; discount: DiscountInfo; reason?: undefined }
+  | { valid: false; reason: string; discount?: undefined };
 
 export const validateDiscountCode = async (code: string): Promise<ValidateResult> => {
   const { data, error } = await supabase.rpc("validate_discount_code", { _code: code });
