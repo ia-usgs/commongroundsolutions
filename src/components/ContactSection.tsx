@@ -130,7 +130,20 @@ const ContactSection = () => {
             />
             <select
               value={formData.course}
-              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+              onChange={(e) => {
+                const next = e.target.value;
+                setFormData((prev) => {
+                  const isDiscount = next === "Discount Code Request";
+                  return {
+                    ...prev,
+                    course: next,
+                    message:
+                      isDiscount && !prev.message
+                        ? "I'd like to request a discount code. Category (Military / Law Enforcement / Returning student): ___\nService branch or agency (if applicable): ___\nCourse I'm interested in: ___"
+                        : prev.message,
+                  };
+                });
+              }}
               className="w-full bg-card border border-border px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
