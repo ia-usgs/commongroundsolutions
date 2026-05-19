@@ -58,6 +58,7 @@ export const WAIVER_SECTIONS: { heading: string; body: string[]; bullets?: strin
     heading: "4. Certification of Legal Eligibility",
     body: ["Participant represents and warrants that:"],
     bullets: [
+      "They are 18 years of age or older",
       "They are legally permitted to possess and use firearms under all applicable laws",
       "They are not under the influence of drugs or alcohol",
       "They will comply with all federal, state, and local firearm laws",

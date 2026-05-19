@@ -155,8 +155,9 @@ export const WaiverStep = ({ defaultName, className, submitting, onBack, onSign 
           onCheckedChange={(v) => setAcknowledged(v === true)}
         />
         <Label htmlFor="ack" className="text-sm leading-snug cursor-pointer">
-          I have read this Agreement carefully, fully understand its terms, am signing it
-          voluntarily, and acknowledge that I am giving up substantial legal rights.
+          I am 18 years of age or older. I have read this Agreement carefully, fully understand its
+          terms, am signing it voluntarily, and acknowledge that I am giving up substantial legal
+          rights.
         </Label>
       </div>
 
