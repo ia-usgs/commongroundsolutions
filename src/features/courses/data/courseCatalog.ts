@@ -210,7 +210,6 @@ export const COURSE_CATALOG: Course[] = [
 
     fallbackPrice: "$375",
     fallbackLevel: "Intermediate",
-    forceComingSoon: true,
     description:
       "Scope Carbine II builds directly on the foundation established in Scope Carbine I. This course pushes shooters into extended distance engagements, advanced positional work, and real-world problem solving with a scoped rifle. Class size is limited to 6 students.",
     details: [
