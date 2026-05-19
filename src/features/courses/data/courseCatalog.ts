@@ -169,8 +169,7 @@ export const COURSE_CATALOG: Course[] = [
     title: "American Rifleman I",
     image: classCarbine,
     fallbackPrice: "$350",
-    fallbackLevel: "Intermediate / Advanced",
-    forceComingSoon: true,
+    fallbackLevel: "All Levels",
     description:
       "Rifle Capability & Ballistic Performance. American Rifleman I is a data-driven rifle performance course focused on maximizing the capability of each student's individual rifle system. This is not a beginner firearms safety course — students are expected to arrive with safe weapons handling skills already established.",
     details: [
