@@ -86,13 +86,7 @@ const ClassesSection = () => {
                       className="w-full h-full object-cover bg-card group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
-                    {comingSoon && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                        <span className="font-heading text-2xl tracking-widest text-primary uppercase">
-                          Coming Soon
-                        </span>
-                      </div>
-                    )}
+
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
