@@ -1,6 +1,6 @@
 // Liability waiver text + version. Bump WAIVER_VERSION when the legal copy changes
 // so audit records reflect which version each participant signed.
-export const WAIVER_VERSION = "2026-05-16";
+export const WAIVER_VERSION = "2026-05-19";
 
 export const WAIVER_TITLE =
   "Liability Release, Waiver, Indemnification & Assumption of Risk Agreement";
@@ -58,6 +58,7 @@ export const WAIVER_SECTIONS: { heading: string; body: string[]; bullets?: strin
     heading: "4. Certification of Legal Eligibility",
     body: ["Participant represents and warrants that:"],
     bullets: [
+      "They are 18 years of age or older",
       "They are legally permitted to possess and use firearms under all applicable laws",
       "They are not under the influence of drugs or alcohol",
       "They will comply with all federal, state, and local firearm laws",
