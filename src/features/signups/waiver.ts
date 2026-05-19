@@ -1,6 +1,6 @@
 // Liability waiver text + version. Bump WAIVER_VERSION when the legal copy changes
 // so audit records reflect which version each participant signed.
-export const WAIVER_VERSION = "2026-05-16";
+export const WAIVER_VERSION = "2026-05-19";
 
 export const WAIVER_TITLE =
   "Liability Release, Waiver, Indemnification & Assumption of Risk Agreement";
