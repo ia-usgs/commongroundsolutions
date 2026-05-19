@@ -73,13 +73,7 @@ const CertificationSection = () => {
                   className="w-full h-full object-cover bg-card group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
-                {comingSoon && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                    <span className="font-heading text-2xl tracking-widest text-primary uppercase">
-                      Coming Soon
-                    </span>
-                  </div>
-                )}
+
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
@@ -117,10 +111,15 @@ const CertificationSection = () => {
                 {comingSoon ? (
                   <button
                     type="button"
-                    disabled
-                    className="inline-block font-heading text-sm tracking-widest bg-secondary text-secondary-foreground px-8 py-3 uppercase opacity-70 cursor-not-allowed mt-2"
+                    onClick={() => {
+                      window.location.hash = `contact?reserve=${CPR_COURSE.courseKey}`;
+                      setTimeout(() => {
+                        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                      }, 0);
+                    }}
+                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2"
                   >
-                    Coming Soon
+                    Reserve Now
                   </button>
                 ) : (
                   <button
@@ -129,7 +128,7 @@ const CertificationSection = () => {
                     disabled={seatInfo?.full}
                     className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {seatInfo?.full ? "Class Full" : "Reserve Your Spot"}
+                    {seatInfo?.full ? "Class Full" : "Reserve Now"}
                   </button>
                 )}
               </div>
