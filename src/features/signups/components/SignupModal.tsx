@@ -181,6 +181,9 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
     }
   };
 
+  const [pendingRefCode, setPendingRefCode] = useState<string | null>(null);
+  const requiresRifleData = !!courseKey && RIFLE_DATA_COURSE_KEYS.has(courseKey);
+
   const handleSign = async (waiver: WaiverData) => {
     if (!classId) return;
     const parsed = signupFormSchema.safeParse(form);
@@ -223,9 +226,46 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
         finalCents,
         discount,
       });
-      setStep("confirmation");
+      if (requiresRifleData) {
+        setPendingRefCode(reference_code);
+        setStep("rifle_data");
+      } else {
+        setStep("confirmation");
+      }
     } catch (err: any) {
       toast.error(err.message ?? "Signup failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleRifleSubmit = async (data: RifleDataPayload, ack: boolean) => {
+    if (!pendingRefCode) return;
+    setSubmitting(true);
+    try {
+      await createRifleData(pendingRefCode, data, ack);
+      // Forward rifle data to Web3Forms so the instructor gets it via email
+      try {
+        const body = new FormData();
+        body.append("access_key", SITE.web3formsAccessKey);
+        body.append(
+          "subject",
+          `Rifle Data — ${form.first_name} ${form.last_name} (${className}) — ${pendingRefCode}`
+        );
+        body.append("from_name", `${form.first_name} ${form.last_name}`);
+        body.append("replyto", form.email);
+        body.append("class", className);
+        body.append("reference_code", pendingRefCode);
+        body.append("ammo_acknowledged", ack ? "YES" : "NO");
+        const lines = Object.entries(data).map(([k, v]) => `${k}: ${v || "-"}`);
+        body.append("message", `Reference: ${pendingRefCode}\n\n${lines.join("\n")}`);
+        await fetch("https://api.web3forms.com/submit", { method: "POST", body });
+      } catch (err) {
+        console.error("Rifle data email failed", err);
+      }
+      setStep("confirmation");
+    } catch (err: any) {
+      toast.error(err.message ?? "Could not save rifle data. Please try again.");
     } finally {
       setSubmitting(false);
     }
