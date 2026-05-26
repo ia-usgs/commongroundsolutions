@@ -32,13 +32,18 @@ export type CreateSignupInput = {
   is_returning_customer?: boolean;
 };
 
-export const createSignup = async (input: CreateSignupInput) => {
-  const { error } = await supabase.from("signups").insert({
-    ...input,
-    notes: input.notes ?? null,
-    status: "pending",
-  });
+export const createSignup = async (input: CreateSignupInput): Promise<{ id: string }> => {
+  const { data, error } = await supabase
+    .from("signups")
+    .insert({
+      ...input,
+      notes: input.notes ?? null,
+      status: "pending",
+    })
+    .select("id")
+    .single();
   if (error) throw error;
+  return { id: data.id };
 };
 
 export const fetchSignups = async (): Promise<SignupRow[]> => {
