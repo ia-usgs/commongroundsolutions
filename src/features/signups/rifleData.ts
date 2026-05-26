@@ -57,7 +57,7 @@ export const createRifleData = async (
 ) => {
   const { error } = await supabase.rpc("insert_rifle_data_by_reference", {
     _reference_code: reference_code,
-    _data: data as unknown as Record<string, unknown>,
+    _data: data as never,
     _ammo_acknowledged: ammo_acknowledged,
   });
   if (error) throw error;
