@@ -33,6 +33,8 @@ import { renderWaiverPlainText, WAIVER_TITLE, WAIVER_VERSION } from "../waiver";
 import type { PaymentMethod, SignupFormData } from "../types";
 import { SignupConfirmation } from "./SignupConfirmation";
 import { WaiverStep, type WaiverData } from "./WaiverStep";
+import { RifleDataStep } from "./RifleDataStep";
+import { createRifleData, type RifleDataPayload } from "../rifleData";
 
 type Props = {
   open: boolean;
@@ -41,6 +43,7 @@ type Props = {
   className: string;
   price: string;
   priceCents: number;
+  courseKey?: string | null;
 };
 
 const EMPTY: SignupFormData = {
@@ -52,7 +55,8 @@ const EMPTY: SignupFormData = {
   notes: "",
 };
 
-type Step = "form" | "waiver" | "confirmation";
+type Step = "form" | "waiver" | "rifle_data" | "confirmation";
+const RIFLE_DATA_COURSE_KEYS = new Set(["scope-carbine-1"]);
 
 export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents }: Props) => {
   const [step, setStep] = useState<Step>("form");
