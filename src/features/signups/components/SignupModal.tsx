@@ -58,7 +58,7 @@ const EMPTY: SignupFormData = {
 type Step = "form" | "waiver" | "rifle_data" | "confirmation";
 const RIFLE_DATA_COURSE_KEYS = new Set(["scope-carbine-1"]);
 
-export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents }: Props) => {
+export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents, courseKey }: Props) => {
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<SignupFormData>(EMPTY);
