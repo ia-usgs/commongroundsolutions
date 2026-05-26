@@ -51,16 +51,15 @@ export const EMPTY_RIFLE_DATA: RifleDataPayload = {
 };
 
 export const createRifleData = async (
-  signup_id: string,
+  reference_code: string,
   data: RifleDataPayload,
   ammo_acknowledged: boolean
 ) => {
-  const row = {
-    signup_id,
-    data: data as unknown as Record<string, unknown>,
-    ammo_acknowledged,
-  };
-  const { error } = await supabase.from("signup_rifle_data").insert(row as never);
+  const { error } = await supabase.rpc("insert_rifle_data_by_reference", {
+    _reference_code: reference_code,
+    _data: data as unknown as Record<string, unknown>,
+    _ammo_acknowledged: ammo_acknowledged,
+  });
   if (error) throw error;
 };
 
