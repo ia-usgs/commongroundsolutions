@@ -460,6 +460,26 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
           </>
         )}
 
+        {step === "rifle_data" && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-heading text-2xl tracking-wider text-primary uppercase">
+                Student Rifle Data
+              </DialogTitle>
+              <DialogDescription>
+                Required for {className}. Submitted before payment instructions are shown.
+              </DialogDescription>
+            </DialogHeader>
+            <RifleDataStep
+              submitting={submitting}
+              onBack={() => setStep("waiver")}
+              onSubmit={handleRifleSubmit}
+            />
+          </>
+        )}
+
+
+
         {step === "confirmation" && confirmation && (
           <>
             <DialogHeader>
