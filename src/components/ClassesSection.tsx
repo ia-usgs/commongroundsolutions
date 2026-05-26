@@ -157,6 +157,7 @@ const ClassesSection = () => {
         className={modalState.className}
         price={modalState.price}
         priceCents={modalState.priceCents}
+        courseKey={modalState.courseKey}
       />
     </section>
   );
