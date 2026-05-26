@@ -55,11 +55,12 @@ export const createRifleData = async (
   data: RifleDataPayload,
   ammo_acknowledged: boolean
 ) => {
-  const { error } = await supabase.from("signup_rifle_data").insert({
+  const row = {
     signup_id,
     data: data as unknown as Record<string, unknown>,
     ammo_acknowledged,
-  });
+  };
+  const { error } = await supabase.from("signup_rifle_data").insert(row as never);
   if (error) throw error;
 };
 
