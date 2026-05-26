@@ -291,6 +291,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      insert_rifle_data_by_reference: {
+        Args: {
+          _ammo_acknowledged: boolean
+          _data: Json
+          _reference_code: string
+        }
+        Returns: string
+      }
       validate_discount_code: {
         Args: { _code: string }
         Returns: {
