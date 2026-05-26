@@ -68,6 +68,7 @@ const ClassesSection = () => {
                 className: course.title,
                 price: displayPrice,
                 priceCents: cls.price_cents ?? 0,
+                courseKey: course.courseKey,
               });
             };
 
