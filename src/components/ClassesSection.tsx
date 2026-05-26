@@ -17,7 +17,8 @@ const ClassesSection = () => {
     className: string;
     price: string;
     priceCents: number;
-  }>({ open: false, classId: null, className: "", price: "", priceCents: 0 });
+    courseKey: string | null;
+  }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
 
