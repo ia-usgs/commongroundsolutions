@@ -278,6 +278,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
       setPromoInput("");
       setDiscount(null);
       setDiscountSource(null);
+      setPendingRefCode(null);
       setStep("form");
     }
     onOpenChange(next);
