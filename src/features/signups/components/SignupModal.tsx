@@ -33,6 +33,8 @@ import { renderWaiverPlainText, WAIVER_TITLE, WAIVER_VERSION } from "../waiver";
 import type { PaymentMethod, SignupFormData } from "../types";
 import { SignupConfirmation } from "./SignupConfirmation";
 import { WaiverStep, type WaiverData } from "./WaiverStep";
+import { RifleDataStep } from "./RifleDataStep";
+import { createRifleData, type RifleDataPayload } from "../rifleData";
 
 type Props = {
   open: boolean;
@@ -41,6 +43,7 @@ type Props = {
   className: string;
   price: string;
   priceCents: number;
+  courseKey?: string | null;
 };
 
 const EMPTY: SignupFormData = {
@@ -52,9 +55,10 @@ const EMPTY: SignupFormData = {
   notes: "",
 };
 
-type Step = "form" | "waiver" | "confirmation";
+type Step = "form" | "waiver" | "rifle_data" | "confirmation";
+const RIFLE_DATA_COURSE_KEYS = new Set(["scope-carbine-1"]);
 
-export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents }: Props) => {
+export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents, courseKey }: Props) => {
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<SignupFormData>(EMPTY);
@@ -177,6 +181,9 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
     }
   };
 
+  const [pendingRefCode, setPendingRefCode] = useState<string | null>(null);
+  const requiresRifleData = !!courseKey && RIFLE_DATA_COURSE_KEYS.has(courseKey);
+
   const handleSign = async (waiver: WaiverData) => {
     if (!classId) return;
     const parsed = signupFormSchema.safeParse(form);
@@ -219,9 +226,46 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
         finalCents,
         discount,
       });
-      setStep("confirmation");
+      if (requiresRifleData) {
+        setPendingRefCode(reference_code);
+        setStep("rifle_data");
+      } else {
+        setStep("confirmation");
+      }
     } catch (err: any) {
       toast.error(err.message ?? "Signup failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleRifleSubmit = async (data: RifleDataPayload, ack: boolean) => {
+    if (!pendingRefCode) return;
+    setSubmitting(true);
+    try {
+      await createRifleData(pendingRefCode, data, ack);
+      // Forward rifle data to Web3Forms so the instructor gets it via email
+      try {
+        const body = new FormData();
+        body.append("access_key", SITE.web3formsAccessKey);
+        body.append(
+          "subject",
+          `Rifle Data — ${form.first_name} ${form.last_name} (${className}) — ${pendingRefCode}`
+        );
+        body.append("from_name", `${form.first_name} ${form.last_name}`);
+        body.append("replyto", form.email);
+        body.append("class", className);
+        body.append("reference_code", pendingRefCode);
+        body.append("ammo_acknowledged", ack ? "YES" : "NO");
+        const lines = Object.entries(data).map(([k, v]) => `${k}: ${v || "-"}`);
+        body.append("message", `Reference: ${pendingRefCode}\n\n${lines.join("\n")}`);
+        await fetch("https://api.web3forms.com/submit", { method: "POST", body });
+      } catch (err) {
+        console.error("Rifle data email failed", err);
+      }
+      setStep("confirmation");
+    } catch (err: any) {
+      toast.error(err.message ?? "Could not save rifle data. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -234,6 +278,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
       setPromoInput("");
       setDiscount(null);
       setDiscountSource(null);
+      setPendingRefCode(null);
       setStep("form");
     }
     onOpenChange(next);
@@ -414,6 +459,26 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
             />
           </>
         )}
+
+        {step === "rifle_data" && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-heading text-2xl tracking-wider text-primary uppercase">
+                Student Rifle Data
+              </DialogTitle>
+              <DialogDescription>
+                Required for {className}. Submitted before payment instructions are shown.
+              </DialogDescription>
+            </DialogHeader>
+            <RifleDataStep
+              submitting={submitting}
+              onBack={() => setStep("waiver")}
+              onSubmit={handleRifleSubmit}
+            />
+          </>
+        )}
+
+
 
         {step === "confirmation" && confirmation && (
           <>

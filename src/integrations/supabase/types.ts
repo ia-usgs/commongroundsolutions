@@ -113,6 +113,44 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_rifle_data: {
+        Row: {
+          ammo_acknowledged: boolean
+          created_at: string
+          data: Json
+          id: string
+          signup_id: string
+          submitted_at: string
+          updated_at: string
+        }
+        Insert: {
+          ammo_acknowledged?: boolean
+          created_at?: string
+          data?: Json
+          id?: string
+          signup_id: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Update: {
+          ammo_acknowledged?: boolean
+          created_at?: string
+          data?: Json
+          id?: string
+          signup_id?: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signup_rifle_data_signup_id_fkey"
+            columns: ["signup_id"]
+            isOneToOne: true
+            referencedRelation: "signups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       signups: {
         Row: {
           calendar_event_id: string | null
@@ -252,6 +290,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      insert_rifle_data_by_reference: {
+        Args: {
+          _ammo_acknowledged: boolean
+          _data: Json
+          _reference_code: string
+        }
+        Returns: string
       }
       validate_discount_code: {
         Args: { _code: string }

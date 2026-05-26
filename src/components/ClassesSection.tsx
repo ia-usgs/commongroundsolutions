@@ -17,7 +17,8 @@ const ClassesSection = () => {
     className: string;
     price: string;
     priceCents: number;
-  }>({ open: false, classId: null, className: "", price: "", priceCents: 0 });
+    courseKey: string | null;
+  }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
 
@@ -67,6 +68,7 @@ const ClassesSection = () => {
                 className: course.title,
                 price: displayPrice,
                 priceCents: cls.price_cents ?? 0,
+                courseKey: course.courseKey,
               });
             };
 
@@ -155,6 +157,7 @@ const ClassesSection = () => {
         className={modalState.className}
         price={modalState.price}
         priceCents={modalState.priceCents}
+        courseKey={modalState.courseKey}
       />
     </section>
   );

@@ -1,94 +1,43 @@
-# Discount Codes — Implementation Plan
+- Goal
 
-## Overview
+Collect the American Rifleman I Student Rifle Data Form during signup, so students provide rifle/ammo/optic details ahead of class.
 
-Add a discount system to the signup flow with three sources of discounts:
+## Where it fits in the flow
 
-1. **Admin-managed promo codes** (Military, LEO, custom) — created in admin dashboard, manually approved/issued per request
-2. **Auto-detected returning customer** — if email has a prior confirmed signup, discount auto-applies
-3. **Default for now**: 20% off (configurable per code by admin)
-
-Discount is applied to the price shown on the confirmation screen, recorded on the signup row, and emailed in the waiver receipt so admin sees the expected payment amount.
-
-## User Flow
+Insert a new **Rifle Data** step **after the Waiver, before Payment Confirmation** — only when the class being signed up for is American Rifleman I (`course_key = "scope-carbine-1"`). This keeps the legal acknowledgment first and avoids friction for other classes.
 
 ```text
-[Form] → enters info + optional promo code  → validates code live
-              ↓                                ↓ shows "20% off applied"
-              ↓                                ↓ (or auto-applies returning discount)
-        [Waiver] → sign
-              ↓
-        [Confirmation] → shows ORIGINAL price struck through + DISCOUNTED price
-                       → Zelle/Venmo instructions reflect new amount
-                       → reference code + discount info emailed
+Reservation Form → Waiver → [Rifle Data — AR1 only] → Payment Confirmation
 ```
 
-**Returning customer manual request flow:** The Contact section already has a course select. We'll add a "Request Military / LEO / Returning Discount Code" option that prefills a request template. Admin replies with a code created in the dashboard.
+## Form fields (matches the uploaded document)
 
-## Database Changes
+- **Rifle**: Caliber, Barrel Length, Barrel Twist Rate
+- **Ammunition**: Manufacturer, Product Line, Bullet Grain Weight
+- **Optic**: Manufacturer/Model, Optic Type (Scope/LPVO), Mount Height, Turret Adjustment Values, Reticle Type (BDC/Tree/Crosshair), FFP or SFP, Magnification Range
+- **Red Dot / Magnifier** (optional): Dot Size, Magnifier Magnification, Mount Type, Mount Height
+- **Applied Ballistics**: App Installed (Y/N), Version (Free/Pro)
+- **Acknowledgment checkbox**: "I will bring 500 rounds of consistent ammunition suitable for ballistic data collection."
 
-**New table `discount_codes`:**
-- `code` (text, unique, uppercase) — e.g. `MILITARY-J7K2`
-- `label` (text) — internal note, e.g. "Military — John Doe"
-- `discount_type` (enum: `percent` | `fixed`) — default `percent`
-- `discount_value` (int) — percent (1–100) or cents
-- `category` (enum: `military` | `leo` | `returning` | `custom`) — for reporting
-- `max_uses` (int, nullable) — null = unlimited
-- `used_count` (int, default 0)
-- `expires_at` (timestamptz, nullable)
-- `active` (boolean, default true)
+Student name/email/phone/class date are already captured in the reservation step — no need to re-ask.
 
-RLS:
-- Admins: full manage
-- Public: no direct select — validation goes through a `validate_discount_code(code text, email text)` SECURITY DEFINER function that returns `{ valid, discount_type, discount_value, reason }` without exposing the table
+## Storage
 
-**`signups` table — new columns:**
-- `discount_code` (text, nullable)
-- `discount_type` (text, nullable)
-- `discount_value` (int, nullable)
-- `original_price_cents` (int, nullable)
-- `final_price_cents` (int, nullable)
-- `is_returning_customer` (boolean, default false)
+Add a new `signup_rifle_data` table linked to `signups.id`, with one JSONB column for the answers plus the acknowledgment flag and timestamp. RLS: public insert (matching signup pattern), admins read/update/delete.
 
-**New DB function `check_returning_customer(email text)`** — SECURITY DEFINER, returns boolean: true if email has a prior `confirmed` signup. Public-callable via RPC.
+## Admin visibility
 
-## Code Changes
+In the existing `SignupsManager`, show a "Rifle Data" panel on AR1 signups so the instructor can review answers before class.
 
-**Signup form (`SignupModal.tsx`):**
-- Add optional "Promo code" input + "Apply" button below payment method
-- On Apply → call `validate_discount_code` RPC; show ✓ with discount or ✗ with reason
-- On email blur → call `check_returning_customer` RPC; if true and no promo entered, auto-apply 20% returning discount with a "Welcome back!" badge
-- Promo code wins over returning-customer auto-discount (no stacking)
-- Pass final discount info into `createSignup` and the confirmation screen
+## Optional follow-ups (not in this plan, ask if you want them)
 
-**Confirmation (`SignupConfirmation.tsx`):**
-- Show original price (struck through) + final price
-- Show "Discount: 20% off (MILITARY-XXXX)" line
+- Email the rifle data sheet to the student after submission
+- PDF export of submitted form
+- Allow editing rifle data after submission via the reference code
 
-**Waiver email payload:** add discount code, original price, final price so admin knows exact amount to expect.
+## Technical notes
 
-**Admin dashboard — new "Discount Codes" page:**
-- Table of codes with category, value, uses, expiry, active toggle
-- "Create code" modal: category, label, type, value, max uses, expiry
-- Quick "Generate code" button that auto-creates `{CATEGORY}-{4 random chars}` (e.g. `LEO-K7P3`)
-- Delete / deactivate actions
-
-**Contact form (`ContactSection.tsx`):** Add option "Request discount code (Military / LEO)" that prefills:
-> "I'm a [Military / Law Enforcement] member and would like to request a discount code for [course name]. Service branch / agency: ___"
-
-## Out of Scope
-
-- Auto-emailing the code to requester (admin replies manually)
-- Stacking discounts
-- Per-course discount restrictions (codes apply to any class for now)
-- Stripe / online payment integration
-
-## Files to Touch
-
-- `supabase/migrations/...` — new table, signups columns, two RPC functions
-- `src/features/signups/api.ts` — discount validation, createSignup signature, returning check
-- `src/features/signups/components/SignupModal.tsx` — promo input + auto-detect logic
-- `src/features/signups/components/SignupConfirmation.tsx` — show discount breakdown
-- `src/features/signups/types.ts` — discount fields
-- `src/components/ContactSection.tsx` — "Request discount code" option
-- `src/features/admin/...` — new Discount Codes admin page + nav link
+- New `RifleDataStep.tsx` in `src/features/signups/components/`
+- `SignupModal.tsx` gains a conditional step gated on `courseKey === "scope-carbine-1"`
+- New `rifleData.ts` API helper for the insert
+- Migration creates `signup_rifle_data` table with proper GRANTs + RLS
