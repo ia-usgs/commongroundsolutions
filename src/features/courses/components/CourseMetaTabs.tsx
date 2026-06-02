@@ -28,6 +28,7 @@ export const CourseMetaTabs = ({
   displayLevel,
 }: CourseMetaTabsProps) => {
   const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
+  const isSoldOut = activeInstance?.status === "sold_out" || (seatInfo?.full ?? false);
 
   return (
     <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
@@ -79,10 +80,10 @@ export const CourseMetaTabs = ({
       <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
         <MapPin size={14} /> {displayLocation}
       </span>
-      {seatInfo?.full && (
+      {isSoldOut && (
         <span className="flex items-center gap-1 px-3 py-1 bg-destructive/20 text-destructive">
           <Users size={14} />
-          Class Full
+          Sold Out
         </span>
       )}
     </div>

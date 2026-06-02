@@ -137,10 +137,10 @@ const ClassesSection = () => {
                       <button
                         type="button"
                         onClick={onSignupClick}
-                        disabled={seatInfo?.full}
+                        disabled={seatInfo?.full || activeInstance?.status === "sold_out"}
                         className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {seatInfo?.full ? "Class Full" : "Sign Up Now"}
+                        {seatInfo?.full || activeInstance?.status === "sold_out" ? "Sold Out" : "Sign Up Now"}
                       </button>
                     )}
                   </div>
