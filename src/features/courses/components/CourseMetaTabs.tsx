@@ -80,10 +80,10 @@ export const CourseMetaTabs = ({
       <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
         <MapPin size={14} /> {displayLocation}
       </span>
-      {seatInfo?.full && (
+      {isSoldOut && (
         <span className="flex items-center gap-1 px-3 py-1 bg-destructive/20 text-destructive">
           <Users size={14} />
-          Class Full
+          Sold Out
         </span>
       )}
     </div>
