@@ -28,6 +28,7 @@ export const CourseMetaTabs = ({
   displayLevel,
 }: CourseMetaTabsProps) => {
   const seatInfo = activeSlug ? getRemaining(activeSlug) : null;
+  const isSoldOut = activeInstance?.status === "sold_out" || (seatInfo?.full ?? false);
 
   return (
     <div className="flex flex-wrap gap-3 text-xs font-heading tracking-wider">
