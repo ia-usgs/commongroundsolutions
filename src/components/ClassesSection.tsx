@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useClassesAndSeats } from "@/features/classes/hooks/useClassesAndSeats";
 import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
-import { useCourseDescriptions } from "@/features/courses/hooks/useCourseDescriptions";
+import { useCourseOverrides, mergeCourse } from "@/features/courses/hooks/useCourseDescriptions";
 import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
 import { CourseDetailsBlock } from "@/features/courses/components/CourseDetailsBlock";
 import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
@@ -22,7 +22,7 @@ const ClassesSection = () => {
   }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
-  const descriptionOverrides = useCourseDescriptions();
+  const overrides = useCourseOverrides();
 
   return (
     <section id="classes" className="py-24 bg-background">
@@ -35,7 +35,8 @@ const ClassesSection = () => {
         </p>
 
         <div className="max-w-3xl mx-auto space-y-8">
-          {COURSE_CATALOG.map((course) => {
+          {COURSE_CATALOG.map((baseCourse) => {
+            const course = mergeCourse(baseCourse, overrides[baseCourse.courseKey]);
             const isExpanded = expanded === course.courseKey;
             const instances = getClassesByCourseKey(course.courseKey);
             const activeSlug = pickPreferredSlug(
@@ -121,7 +122,7 @@ const ClassesSection = () => {
 
                 {isExpanded && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
-                    <CourseDetailsBlock course={course} descriptionOverride={descriptionOverrides[course.courseKey]} />
+                    <CourseDetailsBlock course={course} />
                     {comingSoon ? (
                       <button
                         type="button"

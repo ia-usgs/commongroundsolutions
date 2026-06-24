@@ -72,16 +72,28 @@ export type Database = {
         Row: {
           course_key: string
           description: string
+          details: Json
+          rental_note: string | null
+          requirements: Json
+          title: string | null
           updated_at: string
         }
         Insert: {
           course_key: string
           description: string
+          details?: Json
+          rental_note?: string | null
+          requirements?: Json
+          title?: string | null
           updated_at?: string
         }
         Update: {
           course_key?: string
           description?: string
+          details?: Json
+          rental_note?: string | null
+          requirements?: Json
+          title?: string | null
           updated_at?: string
         }
         Relationships: []
