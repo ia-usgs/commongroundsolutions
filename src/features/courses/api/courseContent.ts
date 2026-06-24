@@ -1,5 +1,5 @@
 // API for the `course_content` table — admin-editable description overrides per course_key.
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-safe";
 
 export type CourseContentRow = {
   course_key: string;
