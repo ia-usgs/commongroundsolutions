@@ -104,8 +104,8 @@ const CertificationSection = () => {
 
             {isExpanded && (
               <div className="px-6 pb-6 space-y-4 border-t border-border pt-6 animate-fade-in-up">
-                <p className="text-foreground/80 leading-relaxed">{cprDescription}</p>
-                {CPR_COURSE.details.map((p, i) => (
+                <p className="text-foreground/80 leading-relaxed">{course.description}</p>
+                {course.details.map((p, i) => (
                   <p key={i} className="text-foreground/80 leading-relaxed">
                     {p}
                   </p>
