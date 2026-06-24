@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useClassesAndSeats } from "@/features/classes/hooks/useClassesAndSeats";
 import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
+import { useCourseDescriptions } from "@/features/courses/hooks/useCourseDescriptions";
 import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
 import { CourseDetailsBlock } from "@/features/courses/components/CourseDetailsBlock";
 import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
@@ -21,6 +22,7 @@ const ClassesSection = () => {
   }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
+  const descriptionOverrides = useCourseDescriptions();
 
   return (
     <section id="classes" className="py-24 bg-background">
@@ -119,7 +121,7 @@ const ClassesSection = () => {
 
                 {isExpanded && (
                   <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
-                    <CourseDetailsBlock course={course} />
+                    <CourseDetailsBlock course={course} descriptionOverride={descriptionOverrides[course.courseKey]} />
                     {comingSoon ? (
                       <button
                         type="button"

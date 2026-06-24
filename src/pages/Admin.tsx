@@ -5,6 +5,7 @@ import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { ClassesManager } from "@/features/admin/components/ClassesManager";
 import { SignupsManager } from "@/features/admin/components/SignupsManager";
 import { DiscountCodesManager } from "@/features/admin/components/DiscountCodesManager";
+import { CourseDescriptionsManager } from "@/features/admin/components/CourseDescriptionsManager";
 
 const Admin = () => {
   const { ready } = useAdminGuard();
@@ -27,6 +28,7 @@ const Admin = () => {
       <AdminHeader />
       <div className="container mx-auto px-4 py-8 space-y-10">
         <ClassesManager classes={classes} signups={signups} onChanged={refresh} />
+        <CourseDescriptionsManager />
         <SignupsManager signups={signups} classes={classes} onChanged={refresh} />
         <DiscountCodesManager />
       </div>

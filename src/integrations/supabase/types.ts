@@ -68,6 +68,24 @@ export type Database = {
         }
         Relationships: []
       }
+      course_content: {
+        Row: {
+          course_key: string
+          description: string
+          updated_at: string
+        }
+        Insert: {
+          course_key: string
+          description: string
+          updated_at?: string
+        }
+        Update: {
+          course_key?: string
+          description?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       discount_codes: {
         Row: {
           active: boolean
