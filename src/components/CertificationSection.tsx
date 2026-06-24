@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useClassesAndSeats } from "@/features/classes/hooks/useClassesAndSeats";
 import { CPR_COURSE } from "@/features/courses/data/courseCatalog";
-import { useCourseDescriptions } from "@/features/courses/hooks/useCourseDescriptions";
+import { useCourseOverrides, mergeCourse } from "@/features/courses/hooks/useCourseDescriptions";
 import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
 import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
 import { SignupModal } from "@/features/signups/components/SignupModal";
@@ -20,9 +20,9 @@ const CertificationSection = () => {
   }>({ open: false, classId: null, className: "", price: "", priceCents: 0 });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
-  const descriptionOverrides = useCourseDescriptions();
-  const cprDescription = descriptionOverrides[CPR_COURSE.courseKey] ?? CPR_COURSE.description;
-  const instances = getClassesByCourseKey(CPR_COURSE.courseKey);
+  const overrides = useCourseOverrides();
+  const course = mergeCourse(CPR_COURSE, overrides[CPR_COURSE.courseKey]);
+  const instances = getClassesByCourseKey(course.courseKey);
 
   const activeSlug = pickPreferredSlug(
     instances,

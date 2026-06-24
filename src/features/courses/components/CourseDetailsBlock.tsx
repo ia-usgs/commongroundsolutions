@@ -2,13 +2,7 @@
 // then the gear/requirements list and rental note.
 import type { Course } from "../types";
 
-export const CourseDetailsBlock = ({
-  course,
-  descriptionOverride,
-}: {
-  course: Course;
-  descriptionOverride?: string;
-}) => {
+export const CourseDetailsBlock = ({ course }: { course: Course }) => {
   const details = course.details ?? [];
   const intro = details.slice(0, 2);
   const bullets = details.slice(2, -1);
@@ -16,7 +10,7 @@ export const CourseDetailsBlock = ({
 
   return (
     <>
-      <p className="text-foreground/80 leading-relaxed">{descriptionOverride ?? course.description}</p>
+      <p className="text-foreground/80 leading-relaxed">{course.description}</p>
       {intro.map((p, i) => (
         <p key={`intro-${i}`} className="text-foreground/80 leading-relaxed">
           {p}
