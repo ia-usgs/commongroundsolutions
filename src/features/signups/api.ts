@@ -33,12 +33,13 @@ export type CreateSignupInput = {
 };
 
 export const createSignup = async (input: CreateSignupInput) => {
-  const { error } = await supabase.from("signups").insert({
-    ...input,
-    notes: input.notes ?? null,
-    status: "pending",
+  const { data, error } = await supabase.functions.invoke("create-signup", {
+    body: input,
   });
   if (error) throw error;
+  if (data && typeof data === "object" && "error" in data) {
+    throw new Error(typeof data.error === "string" ? data.error : "Failed to create signup");
+  }
 };
 
 export const fetchSignups = async (): Promise<SignupRow[]> => {
