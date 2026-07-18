@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useClassesAndSeats } from "@/features/classes/hooks/useClassesAndSeats";
 import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
 import { useCourseOverrides, mergeCourse } from "@/features/courses/hooks/useCourseDescriptions";
