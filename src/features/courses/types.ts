@@ -6,9 +6,11 @@ export type CourseKey =
   | "pistol-performance-2"
   | "baseline-pistol"
   | "defensive-dynamic"
+  | "defensive-pistol-tacmed"
   | "scope-carbine-1"
   | "scope-carbine-2"
   | "cpr-aed-firstaid";
+
 
 export type Course = {
   courseKey: CourseKey;
