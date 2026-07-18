@@ -8,7 +8,8 @@ export type CourseKey =
   | "defensive-dynamic"
   | "scope-carbine-1"
   | "scope-carbine-2"
-  | "cpr-aed-firstaid";
+  | "cpr-aed-firstaid"
+  | "tacmed-pistol";
 
 export type Course = {
   courseKey: CourseKey;

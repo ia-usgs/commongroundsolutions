@@ -6,6 +6,7 @@ import { SITE } from "@/config/site";
 const RESERVE_COURSE_MAP: Record<string, string> = {
   "scope-carbine-1": "American Rifleman I — Reserve Spot",
   "scope-carbine-2": "American Rifleman II — Reserve Spot",
+  "tacmed-pistol": "Defensive Pistol / TacMed Course — Reserve Spot",
 };
 
 const ContactSection = () => {
@@ -152,6 +153,7 @@ const ContactSection = () => {
               <option value="Baseline Pistol Course">Baseline Pistol Course (May 24th)</option>
               <option value="Defensive Dynamic Performance">Defensive Dynamic Performance (TBA)</option>
               <option value="Pistol Performance II">Pistol Performance II</option>
+              <option value="Defensive Pistol / TacMed Course — Reserve Spot">Defensive Pistol / TacMed Course — Reserve Spot</option>
               <option value="American Rifleman I — Reserve Spot">American Rifleman I — Reserve Spot</option>
               <option value="American Rifleman II — Reserve Spot">American Rifleman II — Reserve Spot</option>
               <option value="CPR / AED / First Aid">CPR / AED / First Aid ($90)</option>

@@ -9,6 +9,7 @@ import classCarbine2 from "@/assets/class-scoped-carbine-1.jpg";
 
 import classDefensive from "@/assets/class-defensive.jpg";
 import cprFlyer from "@/assets/cpr-certification.png";
+import classTacMed from "@/assets/class-tacmed.png";
 import type { Course, CourseKey } from "@/features/courses/types";
 
 const RENTAL_NOTE =
@@ -244,6 +245,40 @@ export const COURSE_CATALOG: Course[] = [
     ],
     rentalNote: RENTAL_NOTE,
   },
+  {
+    courseKey: "tacmed-pistol",
+    title: "Defensive Pistol / TacMed Course",
+    image: classTacMed,
+    fallbackPrice: "$265",
+    fallbackLevel: "All Levels",
+    description:
+      "Elevate your Defensive Pistol and Pre-Hospital lifesaving skills with an exclusive training experience hosted by Common Ground Solutions (CGS) in collaboration with BlackLite Tactics and Millennia Defense. This specialized course combines lifesaving medical response skills with defensive pistol skills, preparing students to handle critical situations with confidence, competence, and composure. Hosted at the CGS Ranch — one of Southern California’s premier private training facilities, students will have access to a unique training environment designed for realistic, Defensive based learning.",
+    details: [
+      "Prior Pistol Fundamentals and Stop the Bleed training is required. This is not a fundamental course.",
+      "CGS provides the space, resources, and atmosphere where serious training meets real-world application.",
+      "Ideal for responsible concealed carriers and experienced shooters looking to expand their knowledge in both tactical medicine and defensive pistol shooting.",
+      "Medical Training: Learn essential trauma care skills, including tourniquet application, wound packing, and managing life-threatening injuries in high-stress environments.",
+      "Defensive Pistol Skills: Understand and apply practical defensive shooting principles, drawing from the waistband safely/proficiently, moving and shooting, using cover and concealment, and shooting around barricades.",
+      "Integrated Scenarios: Participate in drills that combine firearms proficiency with medical response, simulating real-world emergencies where both skills are critical.",
+      "Start Time: 07:30 AM Sharp (includes safety debrief, equipment/gear setup, and loading/unloading best practices).",
+      "End Time: 2:30 PM.",
+      "Sign Up Today: Take control of your personal safety. Register for our TacMed Pistol Course and start your journey to becoming a more confident and capable shooter. Be an asset, not a liability.",
+    ],
+    requirements: [
+      "Pistol",
+      "350 rounds",
+      "In The Waistband (IWB) Holster or On the Waistband (OWB) Holster (Kydex ONLY. NO Serpa, Leather or Nylon)",
+      "Appropriate range attire (pants, closed-toe shoes, no low-cut shirts)",
+      "2 Spare Magazines",
+      "Spare mag retention (holster w/ sidecar, or neomag)",
+      "Eye and ear protection",
+      "IFAK (Individual First Aid Kit)",
+      "Lunch & water",
+      "Pen & paper",
+      "Chair",
+    ],
+    rentalNote: RENTAL_NOTE,
+  },
 ];
 
 // CPR is rendered separately (its own section) but uses the same data shape.
@@ -274,5 +309,6 @@ export const COURSE_GROUPS: { key: CourseKey; label: string }[] = [
   { key: "defensive-dynamic", label: "Defensive Dynamic Performance" },
   { key: "scope-carbine-1", label: "American Rifleman I" },
   { key: "scope-carbine-2", label: "American Rifleman II" },
+  { key: "tacmed-pistol", label: "Defensive Pistol / TacMed Course" },
   { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
 ];
