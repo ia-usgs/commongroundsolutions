@@ -84,11 +84,17 @@ const ClassesSection = () => {
                   className="cursor-pointer"
                   onClick={() => setExpanded(isExpanded ? null : course.courseKey)}
                 >
-                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+                  <div className={cn(
+                    "relative h-48 sm:h-56 md:h-64 overflow-hidden",
+                    course.imageFit === "object-contain" && "bg-black"
+                  )}>
                     <img
                       src={course.image}
                       alt={course.title}
-                      className="w-full h-full object-cover bg-card group-hover:scale-105 transition-transform duration-500"
+                      className={cn(
+                        "w-full h-full group-hover:scale-105 transition-transform duration-500",
+                        course.imageFit === "object-contain" ? "object-contain" : "object-cover"
+                      )}
                     />
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
 
