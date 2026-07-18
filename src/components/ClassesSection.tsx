@@ -25,16 +25,16 @@ const ClassesSection = () => {
   const overrides = useCourseOverrides();
 
   return (
-    <section id="classes" className="py-24 bg-background">
+    <section id="classes" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-center text-primary mb-4">
           Our Courses
         </h2>
-        <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-10 md:mb-16 max-w-2xl mx-auto">
           Click on a course below to learn more and sign up. Classes are added frequently. Check back for updated schedules.
         </p>
 
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           {COURSE_CATALOG.map((baseCourse) => {
             const course = mergeCourse(baseCourse, overrides[baseCourse.courseKey]);
             const isExpanded = expanded === course.courseKey;
@@ -84,7 +84,7 @@ const ClassesSection = () => {
                   className="cursor-pointer"
                   onClick={() => setExpanded(isExpanded ? null : course.courseKey)}
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                     <img
                       src={course.image}
                       alt={course.title}
@@ -93,9 +93,9 @@ const ClassesSection = () => {
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
 
                   </div>
-                  <div className="p-6">
+                  <div className="p-4 md:p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-2xl font-heading font-semibold text-foreground">
+                      <h3 className="text-xl md:text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
                       {isExpanded ? (
