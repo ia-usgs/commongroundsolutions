@@ -87,7 +87,7 @@ const ClassesSection = () => {
                 >
                   <div className={cn(
                     "relative h-48 sm:h-56 md:h-64 overflow-hidden",
-                    course.imageFit === "object-contain" && "bg-background"
+                    course.imageFit === "object-contain" && "bg-black"
                   )}>
                     <img
                       src={course.image}
