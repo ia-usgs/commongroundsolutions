@@ -31,8 +31,7 @@ const SocialMediaSection = () => {
           <div className="w-full bg-secondary/20 rounded-xl overflow-hidden shadow-lg border border-border">
             <iframe
               src="https://www.instagram.com/cgstraininggroup/embed"
-              className="w-full"
-              style={{ minHeight: 600 }}
+              className="w-full min-h-[400px] md:min-h-[600px]"
               allowTransparency={true}
               allow="encrypted-media"
               title="Instagram Feed"
