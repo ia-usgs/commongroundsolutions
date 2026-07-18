@@ -16,6 +16,8 @@ export type Course = {
   courseKey: CourseKey;
   title: string;
   image: string;
+  /** Tailwind object-fit class for the card image. */
+  imageFit?: "object-cover" | "object-contain";
   fallbackPrice: string;
   fallbackLevel: string;
   fallbackTime?: string;

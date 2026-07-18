@@ -174,6 +174,7 @@ export const COURSE_CATALOG: Course[] = [
     courseKey: "defensive-pistol-tacmed",
     title: "Defensive Pistol / TacMed Course",
     image: classTacmed,
+    imageFit: "object-contain",
     fallbackPrice: "$265",
     fallbackLevel: "All Levels",
     fallbackLocation: "Nuevo, CA",
