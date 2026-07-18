@@ -13,6 +13,7 @@ export type CourseKey =
   | "tacmed-pistol";
 
 
+
 export type Course = {
   courseKey: CourseKey;
   title: string;
