@@ -8,6 +8,8 @@ import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine2 from "@/assets/class-scoped-carbine-1.jpg";
 
 import classDefensive from "@/assets/class-defensive.jpg";
+import classTacmed from "@/assets/class-tacmed.jpg";
+
 import cprFlyer from "@/assets/cpr-certification.png";
 import classTacMed from "@/assets/class-tacmed.png";
 import type { Course, CourseKey } from "@/features/courses/types";
@@ -170,7 +172,45 @@ export const COURSE_CATALOG: Course[] = [
     rentalNote: RENTAL_NOTE,
   },
   {
+    courseKey: "defensive-pistol-tacmed",
+    title: "Defensive Pistol / TacMed Course",
+    image: classTacmed,
+    fallbackPrice: "$265",
+    fallbackLevel: "All Levels",
+    fallbackLocation: "Nuevo, CA",
+    description:
+      "Defensive Pistol/TacMed Course | BlackLite Tactics x Millennia Defense x Common Ground Solutions. Elevate your Defensive Pistol and Pre-Hospital lifesaving skills with an exclusive training experience hosted by Common Ground Solutions (CGS) in collaboration with BlackLite Tactics and Millennia Defense.",
+    details: [
+      "This specialized course combines lifesaving medical response skills with defensive pistol skills, preparing students to handle critical situations with confidence, competence, and composure.",
+      "Hosted at the CGS Ranch — one of Southern California's premier private training facilities, students will have access to a unique training environment designed for realistic, defensive-based learning. CGS provides the space, resources, and atmosphere where serious training meets real-world application.",
+      "Ideal for responsible concealed carriers and experienced shooters with a solid foundation in pistol fundamentals and Stop the Bleed training. This course is perfect for those looking to expand their knowledge in both tactical medicine and defensive pistol shooting.",
+      "Prior Pistol Fundamentals and Stop the Bleed training is required. This is not a fundamentals course.",
+      "Course Highlights:",
+      "Medical Training — Learn essential trauma care skills, including tourniquet application, wound packing, and managing life-threatening injuries in high-stress environments.",
+      "Defensive Pistol Skills — Understand and apply practical defensive shooting principles. Drawing from the waistband safely and proficiently. Moving and shooting. Using cover and concealment. Learning to shoot around a barricade.",
+      "Integrated Scenarios — Participate in drills that combine firearms proficiency with medical response, simulating real-world emergencies where both skills are critical.",
+      "Schedule: Start Time 0730 sharp — Safety Debrief, Equipment/gear setup, Loading/Unloading best practices. End Time 2:30pm. Break included.",
+      "Learning Objectives: Drawing proficiently from IWB holster, use of cover and concealment, shooting from a barricade, tourniquet application, wound packing, hot zone / warm zone care.",
+      "Class size limited to 10 students. Sign up today and take control of your personal safety. Be an asset, not a liability.",
+    ],
+    requirements: [
+      "Pistol",
+      "350 rounds",
+      "IWB or OWB Holster (Kydex ONLY — NO SERPA, Leather, or Nylon)",
+      "Range-appropriate attire (no open-toe shoes or low-cut shirts) and pants",
+      "2 spare magazines",
+      "Spare mag retention (holster with sidecar, or Neomag)",
+      "Eye and ear protection",
+      "Lunch & water",
+      "Pen & paper",
+      "IFAK",
+      "Chair",
+    ],
+    rentalNote: RENTAL_NOTE,
+  },
+  {
     courseKey: "scope-carbine-1",
+
     title: "American Rifleman I",
     image: classCarbine,
     fallbackPrice: "$350",
@@ -307,8 +347,10 @@ export const COURSE_GROUPS: { key: CourseKey; label: string }[] = [
   { key: "pistol-performance-2", label: "Pistol Performance II" },
   { key: "baseline-pistol", label: "Baseline Pistol Course" },
   { key: "defensive-dynamic", label: "Defensive Dynamic Performance" },
+  { key: "defensive-pistol-tacmed", label: "Defensive Pistol / TacMed Course" },
   { key: "scope-carbine-1", label: "American Rifleman I" },
   { key: "scope-carbine-2", label: "American Rifleman II" },
   { key: "tacmed-pistol", label: "Defensive Pistol / TacMed Course" },
   { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
+
 ];
