@@ -14,6 +14,7 @@ export type CourseKey =
 
 
 
+
 export type Course = {
   courseKey: CourseKey;
   title: string;
