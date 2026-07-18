@@ -15,7 +15,7 @@ const features = [
 
 const MissionSection = () => {
   return (
-    <section id="mission" className="py-24 bg-secondary">
+    <section id="mission" className="py-16 md:py-24 bg-secondary">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-center text-primary mb-6">
           Our Mission
@@ -39,9 +39,9 @@ const MissionSection = () => {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-card border border-border p-8 text-center group hover:border-primary/50 transition-colors"
+              className="bg-card border border-border p-6 md:p-8 text-center group hover:border-primary/50 transition-colors"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-primary/10 text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                 <feature.icon size={32} />
               </div>
               <h3 className="text-xl font-heading font-semibold text-foreground mb-3">

@@ -25,16 +25,16 @@ const ClassesSection = () => {
   const overrides = useCourseOverrides();
 
   return (
-    <section id="classes" className="py-24 bg-background">
+    <section id="classes" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-center text-primary mb-4">
           Our Courses
         </h2>
-        <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-10 md:mb-16 max-w-2xl mx-auto">
           Click on a course below to learn more and sign up. Classes are added frequently. Check back for updated schedules.
         </p>
 
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           {COURSE_CATALOG.map((baseCourse) => {
             const course = mergeCourse(baseCourse, overrides[baseCourse.courseKey]);
             const isExpanded = expanded === course.courseKey;
@@ -84,7 +84,7 @@ const ClassesSection = () => {
                   className="cursor-pointer"
                   onClick={() => setExpanded(isExpanded ? null : course.courseKey)}
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                     <img
                       src={course.image}
                       alt={course.title}
@@ -93,9 +93,9 @@ const ClassesSection = () => {
                     <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
 
                   </div>
-                  <div className="p-6">
+                  <div className="p-4 md:p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-2xl font-heading font-semibold text-foreground">
+                      <h3 className="text-xl md:text-2xl font-heading font-semibold text-foreground">
                         {course.title}
                       </h3>
                       {isExpanded ? (
@@ -121,7 +121,7 @@ const ClassesSection = () => {
                 </div>
 
                 {isExpanded && (
-                  <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
+                  <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4 md:space-y-6 border-t border-border pt-4 md:pt-6 animate-fade-in-up">
                     <CourseDetailsBlock course={course} />
                     {comingSoon ? (
                       <button
@@ -132,7 +132,7 @@ const ClassesSection = () => {
                             document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                           }, 0);
                         }}
-                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase"
                       >
                         Reserve Your Spot
                       </button>
@@ -141,7 +141,7 @@ const ClassesSection = () => {
                         type="button"
                         onClick={onSignupClick}
                         disabled={seatInfo?.full || activeInstance?.status === "sold_out"}
-                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {seatInfo?.full || activeInstance?.status === "sold_out" ? "Sold Out" : "Sign Up Now"}
                       </button>

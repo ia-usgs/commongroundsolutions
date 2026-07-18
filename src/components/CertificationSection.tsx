@@ -57,19 +57,19 @@ const CertificationSection = () => {
   };
 
   return (
-    <section id="certification" className="py-24 bg-background">
+    <section id="certification" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-center text-primary mb-4">
           {CPR_COURSE.title}
         </h2>
-        <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-10 md:mb-16 max-w-2xl mx-auto">
           Click below to learn more and reserve your spot.
         </p>
 
         <div className="max-w-3xl mx-auto">
           <div className="bg-card border border-border overflow-hidden group hover:border-primary/50 transition-all">
             <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                 <img
                   src={CPR_COURSE.image}
                   alt="American Red Cross CPR / AED / First Aid Certified Training Available"
@@ -78,9 +78,9 @@ const CertificationSection = () => {
                 <div className="absolute inset-0 bg-background/30 group-hover:bg-background/10 transition-colors" />
 
               </div>
-              <div className="p-6">
+              <div className="p-4 md:p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-2xl font-heading font-semibold text-foreground">
+                  <h3 className="text-xl md:text-2xl font-heading font-semibold text-foreground">
                     {CPR_COURSE.title}
                   </h3>
                   {isExpanded ? (
@@ -103,7 +103,7 @@ const CertificationSection = () => {
             </div>
 
             {isExpanded && (
-              <div className="px-6 pb-6 space-y-4 border-t border-border pt-6 animate-fade-in-up">
+              <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4 border-t border-border pt-4 md:pt-6 animate-fade-in-up">
                 <p className="text-foreground/80 leading-relaxed">{course.description}</p>
                 {course.details.map((p, i) => (
                   <p key={i} className="text-foreground/80 leading-relaxed">
@@ -120,7 +120,7 @@ const CertificationSection = () => {
                         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                       }, 0);
                     }}
-                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2"
+                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase mt-2"
                   >
                     Reserve Now
                   </button>
@@ -129,7 +129,7 @@ const CertificationSection = () => {
                     type="button"
                     onClick={openSignup}
                     disabled={seatInfo?.full}
-                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {seatInfo?.full ? "Class Full" : "Reserve Now"}
                   </button>
