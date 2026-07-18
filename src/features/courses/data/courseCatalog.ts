@@ -8,7 +8,7 @@ import classCarbine from "@/assets/class-scoped-carbine.jpg";
 import classCarbine2 from "@/assets/class-scoped-carbine-1.jpg";
 
 import classDefensive from "@/assets/class-defensive.jpg";
-import classTacmed from "@/assets/class-tacmed.jpg";
+import classTacmed from "@/assets/class-tacmed.png.asset.json";
 
 import cprFlyer from "@/assets/cpr-certification.png";
 import classTacMed from "@/assets/class-tacmed.png";
@@ -174,7 +174,7 @@ export const COURSE_CATALOG: Course[] = [
   {
     courseKey: "defensive-pistol-tacmed",
     title: "Defensive Pistol / TacMed Course",
-    image: classTacmed,
+    image: classTacmed.url,
     fallbackPrice: "$265",
     fallbackLevel: "All Levels",
     fallbackLocation: "Nuevo, CA",
