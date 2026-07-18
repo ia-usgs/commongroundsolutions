@@ -121,7 +121,7 @@ const ClassesSection = () => {
                 </div>
 
                 {isExpanded && (
-                  <div className="px-6 pb-6 space-y-6 border-t border-border pt-6 animate-fade-in-up">
+                  <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4 md:space-y-6 border-t border-border pt-4 md:pt-6 animate-fade-in-up">
                     <CourseDetailsBlock course={course} />
                     {comingSoon ? (
                       <button
@@ -132,7 +132,7 @@ const ClassesSection = () => {
                             document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                           }, 0);
                         }}
-                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase"
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase"
                       >
                         Reserve Your Spot
                       </button>
@@ -141,7 +141,7 @@ const ClassesSection = () => {
                         type="button"
                         onClick={onSignupClick}
                         disabled={seatInfo?.full || activeInstance?.status === "sold_out"}
-                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {seatInfo?.full || activeInstance?.status === "sold_out" ? "Sold Out" : "Sign Up Now"}
                       </button>
