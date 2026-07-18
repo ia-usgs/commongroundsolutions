@@ -103,7 +103,7 @@ const CertificationSection = () => {
             </div>
 
             {isExpanded && (
-              <div className="px-6 pb-6 space-y-4 border-t border-border pt-6 animate-fade-in-up">
+              <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4 border-t border-border pt-4 md:pt-6 animate-fade-in-up">
                 <p className="text-foreground/80 leading-relaxed">{course.description}</p>
                 {course.details.map((p, i) => (
                   <p key={i} className="text-foreground/80 leading-relaxed">
@@ -120,7 +120,7 @@ const CertificationSection = () => {
                         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                       }, 0);
                     }}
-                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2"
+                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase mt-2"
                   >
                     Reserve Now
                   </button>
@@ -129,7 +129,7 @@ const CertificationSection = () => {
                     type="button"
                     onClick={openSignup}
                     disabled={seatInfo?.full}
-                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3 hover:bg-primary/80 transition-colors uppercase mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-block font-heading text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 md:px-8 hover:bg-primary/80 transition-colors uppercase mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {seatInfo?.full ? "Class Full" : "Reserve Now"}
                   </button>
