@@ -6,7 +6,7 @@ import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
 import { useCourseOverrides, mergeCourse } from "@/features/courses/hooks/useCourseDescriptions";
 import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
 import { CourseDetailsBlock } from "@/features/courses/components/CourseDetailsBlock";
-import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
+import { isCourseComingSoon, pickPreferredSlug, getNextUpcomingDate } from "@/features/courses/lib/selection";
 import { SignupModal } from "@/features/signups/components/SignupModal";
 import { formatPrice, formatTimeRange } from "@/lib/format";
 
