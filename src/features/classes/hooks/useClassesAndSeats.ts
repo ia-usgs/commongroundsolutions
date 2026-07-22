@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase-safe";
 import { fetchClasses, fetchSeatCounts } from "../api";
+import { sortInstancesByUpcoming } from "@/features/courses/lib/selection";
 import type { ClassRow, SeatAvailability, SeatCount } from "../types";
 
 export const useClassesAndSeats = () => {
