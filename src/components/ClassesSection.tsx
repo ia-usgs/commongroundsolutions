@@ -6,7 +6,7 @@ import { COURSE_CATALOG } from "@/features/courses/data/courseCatalog";
 import { useCourseOverrides, mergeCourse } from "@/features/courses/hooks/useCourseDescriptions";
 import { CourseMetaTabs } from "@/features/courses/components/CourseMetaTabs";
 import { CourseDetailsBlock } from "@/features/courses/components/CourseDetailsBlock";
-import { isCourseComingSoon, pickPreferredSlug } from "@/features/courses/lib/selection";
+import { isCourseComingSoon, pickPreferredSlug, getNextUpcomingDate } from "@/features/courses/lib/selection";
 import { SignupModal } from "@/features/signups/components/SignupModal";
 import { formatPrice, formatTimeRange } from "@/lib/format";
 
@@ -36,7 +36,15 @@ const ClassesSection = () => {
         </p>
 
         <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
-          {COURSE_CATALOG.map((baseCourse) => {
+          {[...COURSE_CATALOG]
+            .map((c) => ({ c, next: getNextUpcomingDate(getClassesByCourseKey(c.courseKey)) }))
+            .sort((a, b) => {
+              if (a.next && b.next) return a.next.localeCompare(b.next);
+              if (a.next) return -1;
+              if (b.next) return 1;
+              return 0;
+            })
+            .map(({ c: baseCourse }) => {
             const course = mergeCourse(baseCourse, overrides[baseCourse.courseKey]);
             const isExpanded = expanded === course.courseKey;
             const instances = getClassesByCourseKey(course.courseKey);

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase-safe";
 import { fetchClasses, fetchSeatCounts } from "../api";
+import { sortInstancesByUpcoming } from "@/features/courses/lib/selection";
 import type { ClassRow, SeatAvailability, SeatCount } from "../types";
 
 export const useClassesAndSeats = () => {
@@ -48,9 +49,7 @@ export const useClassesAndSeats = () => {
   const getClassBySlug = (slug: string) => classes.find((c) => c.slug === slug);
 
   const getClassesByCourseKey = (key: string) =>
-    classes
-      .filter((c) => c.course_key === key)
-      .sort((a, b) => a.class_date.localeCompare(b.class_date));
+    sortInstancesByUpcoming(classes.filter((c) => c.course_key === key));
 
   return { classes, seats, loading, refresh, getRemaining, getClassBySlug, getClassesByCourseKey };
 };
