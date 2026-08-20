@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import logoShort from "@/assets/logo-short.png";
 
@@ -7,6 +8,7 @@ const navItems = [
   { label: "Mission", href: "#mission" },
   { label: "Classes", href: "#classes" },
   { label: "Certification", href: "#certification" },
+  { label: "Merch", href: "/merch", route: true },
   { label: "Social", href: "#social" },
   { label: "Contact", href: "#contact" },
 ];
@@ -14,12 +16,18 @@ const navItems = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
+  const onHome = pathname === "/";
+
+  const linkFor = (item: (typeof navItems)[number]) =>
+    item.route ? item.href : onHome ? item.href : `/${item.href}`;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
 
   return (
     <nav
