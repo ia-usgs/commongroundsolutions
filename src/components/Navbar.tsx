@@ -77,21 +77,30 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden bg-background/98 backdrop-blur-md border-t border-border">
           <ul className="flex flex-col items-center gap-6 py-8">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`font-heading text-lg tracking-widest uppercase transition-colors ${
-                    item.active
-                      ? "text-primary"
-                      : "text-foreground/80 hover:text-primary"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.route ? pathname === item.href : Boolean(item.active) && onHome;
+              const className = `font-heading text-lg tracking-widest uppercase transition-colors ${
+                isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
+              }`;
+              return (
+                <li key={item.label}>
+                  {item.route ? (
+                    <Link to={item.href} onClick={() => setMobileOpen(false)} className={className}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={linkFor(item)}
+                      onClick={() => setMobileOpen(false)}
+                      className={className}
+                    >
+                      {item.label}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+
           </ul>
         </div>
       )}
