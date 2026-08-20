@@ -36,27 +36,33 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between py-3 px-4">
-        <a href="#home" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
           <img src={logoShort} alt="Common Ground Solutions" className="h-12 w-auto" />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => (
-            <li key={item.label}>
-              <a
-                href={item.href}
-                className={`font-heading text-sm tracking-widest uppercase transition-colors ${
-                  item.active
-                    ? "text-primary"
-                    : "text-foreground/80 hover:text-primary"
-                }`}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+        <ul className="hidden md:flex items-center gap-6 lg:gap-9">
+          {navItems.map((item) => {
+            const isActive = item.route ? pathname === item.href : Boolean(item.active) && onHome;
+            const className = `font-heading text-sm tracking-widest uppercase transition-colors ${
+              isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
+            }`;
+            return (
+              <li key={item.label}>
+                {item.route ? (
+                  <Link to={item.href} className={className}>
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a href={linkFor(item)} className={className}>
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
+
 
         {/* Mobile toggle */}
         <button
