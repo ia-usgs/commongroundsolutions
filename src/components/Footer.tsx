@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import logoShort from "@/assets/logo-short.png";
+
 
 const Footer = () => {
   return (
@@ -11,10 +13,12 @@ const Footer = () => {
           </span>
         </div>
         <div className="flex gap-6">
-          <a href="#home" className="text-sm text-muted-foreground hover:text-primary transition-colors">Home</a>
-          <a href="#mission" className="text-sm text-muted-foreground hover:text-primary transition-colors">Mission</a>
-          <a href="#classes" className="text-sm text-muted-foreground hover:text-primary transition-colors">Classes</a>
-          <a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
+          <a href="/#home" className="text-sm text-muted-foreground hover:text-primary transition-colors">Home</a>
+          <a href="/#mission" className="text-sm text-muted-foreground hover:text-primary transition-colors">Mission</a>
+          <a href="/#classes" className="text-sm text-muted-foreground hover:text-primary transition-colors">Classes</a>
+          <Link to="/merch" className="text-sm text-muted-foreground hover:text-primary transition-colors">Merch</Link>
+          <a href="/#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
+
         </div>
       </div>
     </footer>
