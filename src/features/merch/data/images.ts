@@ -1,10 +1,10 @@
-// Maps a product's `image_key` (editable in admin) to a bundled product photo.
-import blackTee from "@/assets/merch-black-oversized-tee.png.asset.json";
-import whiteTee from "@/assets/merch-white-tee.png.asset.json";
+// Maps a product's `image_key` (set in the database) to a bundled product photo.
+import blackTee from "@/assets/merch-black-oversized-tee.png";
+import whiteTee from "@/assets/merch-white-tee.png";
 
 export const MERCH_IMAGES: Record<string, string> = {
-  "black-oversized-tee": blackTee.url,
-  "white-tee": whiteTee.url,
+  "black-oversized-tee": blackTee,
+  "white-tee": whiteTee,
 };
 
 export const getMerchImage = (imageKey: string | null): string | null =>
