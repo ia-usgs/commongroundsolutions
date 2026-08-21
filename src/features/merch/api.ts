@@ -60,7 +60,19 @@ export const createMerchOrder = async (
   input: CreateMerchOrderInput,
 ): Promise<CreateMerchOrderResult> => {
   const { data, error } = await supabase.functions.invoke("create-merch-order", { body: input });
-  if (error) throw error;
+  if (error) {
+    // Surface the function's message (e.g. sold-out) instead of a generic failure.
+    const ctx = (error as { context?: Response }).context;
+    if (ctx && typeof ctx.json === "function") {
+      try {
+        const body = await ctx.json();
+        if (body && typeof body.error === "string") throw new Error(body.error);
+      } catch (parseErr) {
+        if (parseErr instanceof Error && parseErr.message) throw parseErr;
+      }
+    }
+    throw error;
+  }
   if (data && typeof data === "object" && "error" in data) {
     throw new Error(typeof data.error === "string" ? data.error : "Failed to place order");
   }
