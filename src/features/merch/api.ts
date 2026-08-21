@@ -60,7 +60,19 @@ export const createMerchOrder = async (
   input: CreateMerchOrderInput,
 ): Promise<CreateMerchOrderResult> => {
   const { data, error } = await supabase.functions.invoke("create-merch-order", { body: input });
-  if (error) throw error;
+  if (error) {
+    // Surface the function's message (e.g. sold-out) instead of a generic failure.
+    const ctx = (error as { context?: Response }).context;
+    if (ctx && typeof ctx.json === "function") {
+      try {
+        const body = await ctx.json();
+        if (body && typeof body.error === "string") throw new Error(body.error);
+      } catch (parseErr) {
+        if (parseErr instanceof Error && parseErr.message) throw parseErr;
+      }
+    }
+    throw error;
+  }
   if (data && typeof data === "object" && "error" in data) {
     throw new Error(typeof data.error === "string" ? data.error : "Failed to place order");
   }
@@ -93,4 +105,27 @@ export const updateMerchProduct = async (
 ) => {
   const { error } = await supabase.from("merch_products").update(patch).eq("id", id);
   if (error) throw error;
+};
+
+export type SizeAvailability = {
+  product_id: string;
+  size: string;
+  stock: number;
+  ordered: number;
+  remaining: number;
+};
+
+// Map keyed by `${product_id}|${size}` so cards and the modal share one lookup.
+export type AvailabilityMap = Record<string, number>;
+
+export const availabilityKey = (productId: string, size: string) => `${productId}|${size}`;
+
+export const fetchMerchAvailability = async (): Promise<AvailabilityMap> => {
+  const { data, error } = await supabase.rpc("get_merch_size_availability");
+  if (error) throw error;
+  const map: AvailabilityMap = {};
+  for (const row of (data ?? []) as SizeAvailability[]) {
+    map[availabilityKey(row.product_id, row.size)] = Number(row.remaining ?? 0);
+  }
+  return map;
 };

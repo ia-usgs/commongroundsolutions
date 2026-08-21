@@ -18,6 +18,7 @@ import { formatCents } from "@/features/signups/discounts";
 import type { PaymentMethod } from "@/features/signups/types";
 import { createMerchOrder, generateMerchReferenceCode } from "../api";
 import { MAX_QTY_PER_SIZE, SHIPPING_CENTS } from "../constants";
+import { availabilityKey, type AvailabilityMap } from "../api";
 import { merchOrderFormSchema } from "../validation";
 import type { Fulfillment, MerchOrderFormData, MerchProduct } from "../types";
 import { MerchOrderConfirmation } from "./MerchOrderConfirmation";
@@ -27,6 +28,8 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   product: MerchProduct | null;
   initialSize?: string;
+  availability?: AvailabilityMap;
+  onOrdered?: () => void;
 };
 
 const emptyForm = (size: string): MerchOrderFormData => ({
@@ -46,7 +49,14 @@ const emptyForm = (size: string): MerchOrderFormData => ({
   notes: "",
 });
 
-export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Props) => {
+export const MerchOrderModal = ({
+  open,
+  onOpenChange,
+  product,
+  initialSize,
+  availability = {},
+  onOrdered,
+}: Props) => {
   const [form, setForm] = useState<MerchOrderFormData>(emptyForm(initialSize ?? ""));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -67,6 +77,9 @@ export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Pr
   }, [open, initialSize, product]);
 
   if (!product) return null;
+
+  const remainingFor = (size: string) => availability[availabilityKey(product.id, size)] ?? 0;
+  const maxForSize = Math.min(MAX_QTY_PER_SIZE, Math.max(0, remainingFor(form.size)));
 
   const subtotal = product.price_cents * (form.quantity || 1);
   const shipping = form.fulfillment === "ship" ? SHIPPING_CENTS : 0;
@@ -108,6 +121,7 @@ export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Pr
         reference_code: referenceCode,
         notes: form.notes.trim() || null,
       });
+      onOrdered?.();
       setResult({
         refCode: res.reference_code ?? referenceCode,
         method: form.payment_method,
@@ -197,40 +211,55 @@ export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Pr
               <div>
                 <Label>Size</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      type="button"
-                      onClick={() => set("size", size)}
-                      className={`px-3 py-1 text-sm border font-heading tracking-wider transition-colors ${
-                        form.size === size
-                          ? "border-primary text-primary"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                  {product.sizes.map((size) => {
+                    const out = remainingFor(size) <= 0;
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        disabled={out}
+                        title={out ? "Sold out" : `${remainingFor(size)} left`}
+                        onClick={() => {
+                          set("size", size);
+                          set(
+                            "quantity",
+                            Math.min(form.quantity, Math.min(MAX_QTY_PER_SIZE, remainingFor(size))) || 1,
+                          );
+                        }}
+                        className={`px-3 py-1 text-sm border font-heading tracking-wider transition-colors ${
+                          out
+                            ? "border-border/50 text-muted-foreground/40 line-through cursor-not-allowed"
+                            : form.size === size
+                              ? "border-primary text-primary"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
                 </div>
                 {err("size")}
               </div>
               <div>
-                <Label htmlFor="merch-qty">Quantity (max {MAX_QTY_PER_SIZE})</Label>
+                <Label htmlFor="merch-qty">Quantity (max {Math.max(maxForSize, 1)})</Label>
                 <Input
                   id="merch-qty"
                   type="number"
                   min={1}
-                  max={MAX_QTY_PER_SIZE}
+                  max={Math.max(maxForSize, 1)}
                   value={form.quantity}
                   onChange={(e) =>
                     set(
                       "quantity",
-                      Math.min(MAX_QTY_PER_SIZE, Math.max(1, Number(e.target.value) || 1)),
+                      Math.min(Math.max(maxForSize, 1), Math.max(1, Number(e.target.value) || 1)),
                     )
                   }
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Limit {MAX_QTY_PER_SIZE} per item and size.
+                  {maxForSize > 0
+                    ? `${maxForSize} available in ${form.size} (limit ${MAX_QTY_PER_SIZE} per size).`
+                    : "This size is sold out."}
                 </p>
                 {err("quantity")}
               </div>
@@ -358,9 +387,13 @@ export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Pr
               </div>
             </div>
 
-            <Button onClick={submit} disabled={submitting} className="w-full">
+            <Button
+              onClick={submit}
+              disabled={submitting || maxForSize <= 0}
+              className="w-full"
+            >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Place Order
+              {maxForSize <= 0 ? "Sold Out" : "Place Order"}
             </Button>
           </div>
         )}
