@@ -245,6 +245,7 @@ export type Database = {
           sizes: Json
           slug: string
           sort_order: number
+          stock_per_size: number
           updated_at: string
         }
         Insert: {
@@ -259,6 +260,7 @@ export type Database = {
           sizes?: Json
           slug: string
           sort_order?: number
+          stock_per_size?: number
           updated_at?: string
         }
         Update: {
@@ -273,6 +275,7 @@ export type Database = {
           sizes?: Json
           slug?: string
           sort_order?: number
+          stock_per_size?: number
           updated_at?: string
         }
         Relationships: []
@@ -446,6 +449,16 @@ export type Database = {
           class_id: string
           confirmed_count: number
           pending_count: number
+        }[]
+      }
+      get_merch_size_availability: {
+        Args: never
+        Returns: {
+          ordered: number
+          product_id: string
+          remaining: number
+          size: string
+          stock: number
         }[]
       }
       has_role: {
