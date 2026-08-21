@@ -94,3 +94,26 @@ export const updateMerchProduct = async (
   const { error } = await supabase.from("merch_products").update(patch).eq("id", id);
   if (error) throw error;
 };
+
+export type SizeAvailability = {
+  product_id: string;
+  size: string;
+  stock: number;
+  ordered: number;
+  remaining: number;
+};
+
+// Map keyed by `${product_id}|${size}` so cards and the modal share one lookup.
+export type AvailabilityMap = Record<string, number>;
+
+export const availabilityKey = (productId: string, size: string) => `${productId}|${size}`;
+
+export const fetchMerchAvailability = async (): Promise<AvailabilityMap> => {
+  const { data, error } = await supabase.rpc("get_merch_size_availability");
+  if (error) throw error;
+  const map: AvailabilityMap = {};
+  for (const row of (data ?? []) as SizeAvailability[]) {
+    map[availabilityKey(row.product_id, row.size)] = Number(row.remaining ?? 0);
+  }
+  return map;
+};
