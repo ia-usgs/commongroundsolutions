@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
 
   const { data: product, error: productErr } = await supabase
     .from("merch_products")
-    .select("id, name, price_cents, sizes, active")
+    .select("id, name, price_cents, sizes, active, stock_per_size")
     .eq("id", input.product_id)
     .maybeSingle();
 
@@ -83,6 +83,28 @@ Deno.serve(async (req) => {
 
   const sizes = Array.isArray(product.sizes) ? (product.sizes as string[]) : [];
   if (sizes.length > 0 && !sizes.includes(input.size)) return json({ error: "Invalid size" }, 400);
+
+  // Per-size inventory is enforced server-side: stock_per_size minus non-cancelled orders.
+  const stockPerSize = Number(product.stock_per_size ?? 2);
+  const { data: existing, error: existingErr } = await supabase
+    .from("merch_orders")
+    .select("quantity")
+    .eq("product_id", product.id)
+    .eq("size", input.size)
+    .neq("status", "cancelled");
+
+  if (existingErr) return json({ error: "Could not verify inventory" }, 500);
+
+  const ordered = (existing ?? []).reduce(
+    (sum: number, row: { quantity: number }) => sum + Number(row.quantity ?? 0),
+    0,
+  );
+  const remaining = Math.max(stockPerSize - ordered, 0);
+
+  if (remaining <= 0) return json({ error: `Size ${input.size} is sold out` }, 409);
+  if (input.quantity > remaining) {
+    return json({ error: `Only ${remaining} left in size ${input.size}` }, 409);
+  }
 
   // Prices are always recalculated server-side.
   const subtotal = product.price_cents * input.quantity;
