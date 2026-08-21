@@ -7,7 +7,7 @@ export const merchOrderFormSchema = z
     email: z.string().trim().email("Enter a valid email").max(255),
     phone: z.string().trim().min(7, "Enter a valid phone number").max(30),
     size: z.string().min(1, "Select a size"),
-    quantity: z.number().int().min(1).max(20),
+    quantity: z.number().int().min(1).max(2, "Limit 2 per item and size"),
     fulfillment: z.enum(["pickup", "ship"]),
     ship_address_line1: z.string().trim().max(200),
     ship_address_line2: z.string().trim().max(200),

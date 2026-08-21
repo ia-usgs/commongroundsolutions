@@ -17,7 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatCents } from "@/features/signups/discounts";
 import type { PaymentMethod } from "@/features/signups/types";
 import { createMerchOrder, generateMerchReferenceCode } from "../api";
-import { SHIPPING_CENTS } from "../constants";
+import { MAX_QTY_PER_SIZE, SHIPPING_CENTS } from "../constants";
 import { merchOrderFormSchema } from "../validation";
 import type { Fulfillment, MerchOrderFormData, MerchProduct } from "../types";
 import { MerchOrderConfirmation } from "./MerchOrderConfirmation";
@@ -215,15 +215,23 @@ export const MerchOrderModal = ({ open, onOpenChange, product, initialSize }: Pr
                 {err("size")}
               </div>
               <div>
-                <Label htmlFor="merch-qty">Quantity</Label>
+                <Label htmlFor="merch-qty">Quantity (max {MAX_QTY_PER_SIZE})</Label>
                 <Input
                   id="merch-qty"
                   type="number"
                   min={1}
-                  max={20}
+                  max={MAX_QTY_PER_SIZE}
                   value={form.quantity}
-                  onChange={(e) => set("quantity", Math.max(1, Number(e.target.value) || 1))}
+                  onChange={(e) =>
+                    set(
+                      "quantity",
+                      Math.min(MAX_QTY_PER_SIZE, Math.max(1, Number(e.target.value) || 1)),
+                    )
+                  }
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Limit {MAX_QTY_PER_SIZE} per item and size.
+                </p>
                 {err("quantity")}
               </div>
             </div>
