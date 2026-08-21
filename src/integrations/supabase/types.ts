@@ -143,6 +143,140 @@ export type Database = {
         }
         Relationships: []
       }
+      merch_orders: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          fulfillment: Database["public"]["Enums"]["merch_fulfillment"]
+          id: string
+          last_name: string
+          notes: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone: string | null
+          product_id: string
+          product_name: string
+          quantity: number
+          reference_code: string
+          ship_address_line1: string | null
+          ship_address_line2: string | null
+          ship_city: string | null
+          ship_postal_code: string | null
+          ship_state: string | null
+          shipping_cents: number
+          size: string
+          status: Database["public"]["Enums"]["merch_order_status"]
+          subtotal_cents: number
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          fulfillment?: Database["public"]["Enums"]["merch_fulfillment"]
+          id?: string
+          last_name: string
+          notes?: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone?: string | null
+          product_id: string
+          product_name: string
+          quantity?: number
+          reference_code: string
+          ship_address_line1?: string | null
+          ship_address_line2?: string | null
+          ship_city?: string | null
+          ship_postal_code?: string | null
+          ship_state?: string | null
+          shipping_cents?: number
+          size: string
+          status?: Database["public"]["Enums"]["merch_order_status"]
+          subtotal_cents?: number
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          fulfillment?: Database["public"]["Enums"]["merch_fulfillment"]
+          id?: string
+          last_name?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          phone?: string | null
+          product_id?: string
+          product_name?: string
+          quantity?: number
+          reference_code?: string
+          ship_address_line1?: string | null
+          ship_address_line2?: string | null
+          ship_city?: string | null
+          ship_postal_code?: string | null
+          ship_state?: string | null
+          shipping_cents?: number
+          size?: string
+          status?: Database["public"]["Enums"]["merch_order_status"]
+          subtotal_cents?: number
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merch_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "merch_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merch_products: {
+        Row: {
+          active: boolean
+          badges: Json
+          created_at: string
+          description: string | null
+          id: string
+          image_key: string | null
+          name: string
+          price_cents: number
+          sizes: Json
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          badges?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_key?: string | null
+          name: string
+          price_cents?: number
+          sizes?: Json
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          badges?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_key?: string | null
+          name?: string
+          price_cents?: number
+          sizes?: Json
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       signup_rifle_data: {
         Row: {
           ammo_acknowledged: boolean
@@ -345,6 +479,8 @@ export type Database = {
       app_role: "admin" | "user"
       discount_category: "military" | "leo" | "returning" | "custom"
       discount_type: "percent" | "fixed"
+      merch_fulfillment: "pickup" | "ship"
+      merch_order_status: "pending" | "paid" | "shipped" | "cancelled"
       payment_method: "zelle" | "venmo"
       signup_status: "pending" | "confirmed" | "cancelled" | "expired"
     }
@@ -477,6 +613,8 @@ export const Constants = {
       app_role: ["admin", "user"],
       discount_category: ["military", "leo", "returning", "custom"],
       discount_type: ["percent", "fixed"],
+      merch_fulfillment: ["pickup", "ship"],
+      merch_order_status: ["pending", "paid", "shipped", "cancelled"],
       payment_method: ["zelle", "venmo"],
       signup_status: ["pending", "confirmed", "cancelled", "expired"],
     },

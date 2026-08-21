@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import logoShort from "@/assets/logo-short.png";
 
@@ -7,6 +8,7 @@ const navItems = [
   { label: "Mission", href: "#mission" },
   { label: "Classes", href: "#classes" },
   { label: "Certification", href: "#certification" },
+  { label: "Merch", href: "/merch", route: true },
   { label: "Social", href: "#social" },
   { label: "Contact", href: "#contact" },
 ];
@@ -14,12 +16,18 @@ const navItems = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
+  const onHome = pathname === "/";
+
+  const linkFor = (item: (typeof navItems)[number]) =>
+    item.route ? item.href : onHome ? item.href : `/${item.href}`;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
 
   return (
     <nav
@@ -28,27 +36,33 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between py-3 px-4">
-        <a href="#home" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
           <img src={logoShort} alt="Common Ground Solutions" className="h-12 w-auto" />
-        </a>
+        </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => (
-            <li key={item.label}>
-              <a
-                href={item.href}
-                className={`font-heading text-sm tracking-widest uppercase transition-colors ${
-                  item.active
-                    ? "text-primary"
-                    : "text-foreground/80 hover:text-primary"
-                }`}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+        <ul className="hidden md:flex items-center gap-6 lg:gap-9">
+          {navItems.map((item) => {
+            const isActive = item.route ? pathname === item.href : Boolean(item.active) && onHome;
+            const className = `font-heading text-sm tracking-widest uppercase transition-colors ${
+              isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
+            }`;
+            return (
+              <li key={item.label}>
+                {item.route ? (
+                  <Link to={item.href} className={className}>
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a href={linkFor(item)} className={className}>
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
+
 
         {/* Mobile toggle */}
         <button
@@ -63,21 +77,30 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden bg-background/98 backdrop-blur-md border-t border-border">
           <ul className="flex flex-col items-center gap-6 py-8">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`font-heading text-lg tracking-widest uppercase transition-colors ${
-                    item.active
-                      ? "text-primary"
-                      : "text-foreground/80 hover:text-primary"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.route ? pathname === item.href : Boolean(item.active) && onHome;
+              const className = `font-heading text-lg tracking-widest uppercase transition-colors ${
+                isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
+              }`;
+              return (
+                <li key={item.label}>
+                  {item.route ? (
+                    <Link to={item.href} onClick={() => setMobileOpen(false)} className={className}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={linkFor(item)}
+                      onClick={() => setMobileOpen(false)}
+                      className={className}
+                    >
+                      {item.label}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+
           </ul>
         </div>
       )}

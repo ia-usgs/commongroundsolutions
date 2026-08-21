@@ -6,6 +6,9 @@ import { ClassesManager } from "@/features/admin/components/ClassesManager";
 import { SignupsManager } from "@/features/admin/components/SignupsManager";
 import { DiscountCodesManager } from "@/features/admin/components/DiscountCodesManager";
 import { CourseDescriptionsManager } from "@/features/admin/components/CourseDescriptionsManager";
+import { MerchProductsManager } from "@/features/admin/components/MerchProductsManager";
+import { MerchOrdersManager } from "@/features/admin/components/MerchOrdersManager";
+
 
 const Admin = () => {
   const { ready } = useAdminGuard();
@@ -31,6 +34,9 @@ const Admin = () => {
         <CourseDescriptionsManager />
         <SignupsManager signups={signups} classes={classes} onChanged={refresh} />
         <DiscountCodesManager />
+        <MerchProductsManager />
+        <MerchOrdersManager />
+
       </div>
     </div>
   );
