@@ -11,7 +11,7 @@ const BodySchema = z.object({
   email: z.string().email().max(255),
   phone: z.string().min(7).max(30).nullable().optional(),
   size: z.string().min(1).max(10),
-  quantity: z.number().int().min(1).max(20),
+  quantity: z.number().int().min(1).max(2),
   fulfillment: z.enum(["pickup", "ship"]),
   ship_address_line1: z.string().max(200).nullable().optional(),
   ship_address_line2: z.string().max(200).nullable().optional(),
