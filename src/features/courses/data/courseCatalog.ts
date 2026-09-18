@@ -11,6 +11,7 @@ import classDefensive from "@/assets/class-defensive.jpg";
 import classTacmed from "@/assets/class-tacmed.png";
 
 import cprFlyer from "@/assets/cpr-certification.png";
+import classPcslNationals from "@/assets/class-pcsl-nationals.png.asset.json";
 import type { Course, CourseKey } from "@/features/courses/types";
 
 const RENTAL_NOTE =
@@ -285,6 +286,44 @@ export const COURSE_CATALOG: Course[] = [
     ],
     rentalNote: RENTAL_NOTE,
   },
+  {
+    courseKey: "pcsl-nationals-prep",
+    title: "Performance Rifle/Pistol: PCSL Nationals Prep",
+    image: classPcslNationals.url,
+    fallbackPrice: "$650",
+    fallbackLevel: "Intermediate / Advanced",
+    fallbackTime: "9:00 AM–4:00 PM",
+    fallbackLocation: "Private Range, Nuevo, CA",
+    discountsDisabled: true,
+    description:
+      "2-Day Intensive. With PCSL Nationals a week out, this class is built to get you dialed in and fully prepped. Over two full days, we run a focused performance rifle/pistol program designed specifically to prepare you for the demands of Nationals — stage strategy, gun transitions, speed and consistency — everything that separates the top of the leaderboard from the middle of the pack.",
+    details: [
+      "Who this is for: competitors headed to PCSL Nationals who want a final tune-up on skills, and anyone else interested in increasing rifle and pistol performance. This is not a fundamentals class — you should already be comfortable running your gear. Match experience is not required but encouraged.",
+      "Format: two full training days, high round count, direct coaching and feedback.",
+      "Movement and efficiency on stages",
+      "Rifle/pistol transitions under pressure",
+      "Match-specific problems pulled from Nationals stages",
+      "Speed-accuracy calibration — pushing pace without bleeding points",
+      "Mental game and stage planning heading into Nationals",
+      "Mid-range rifle performance",
+      "Round count: 750 rounds pistol / 500 rounds rifle. Class size limited to 16 students.",
+    ],
+    requirements: [
+      "Reliable pistol and rifle",
+      "750 rounds pistol / 500 rounds rifle",
+      "OWB or IWB holster (no nylon holsters permitted)",
+      "At least 3 pistol magazines and 3 rifle magazines",
+      "Magazine carriers for pistol and rifle",
+      "Rifle sling",
+      "Reliable and sturdy belt",
+      "Eye and ear protection",
+      "Appropriate clothing for range (pants, shirt, closed-toe shoes)",
+      "Weapons maintenance & cleaning equipment",
+      "Food and water for two full days",
+      "Chair",
+    ],
+    rentalNote: RENTAL_NOTE,
+  },
 ];
 
 // CPR is rendered separately (its own section) but uses the same data shape.
@@ -316,6 +355,7 @@ export const COURSE_GROUPS: { key: CourseKey; label: string }[] = [
   { key: "defensive-pistol-tacmed", label: "Defensive Pistol / TacMed Course" },
   { key: "scope-carbine-1", label: "American Rifleman I" },
   { key: "scope-carbine-2", label: "American Rifleman II" },
+  { key: "pcsl-nationals-prep", label: "Performance Rifle/Pistol: PCSL Nationals Prep" },
   { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
 
 ];
