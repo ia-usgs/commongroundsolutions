@@ -1,0 +1,1 @@
+INSERT INTO public.classes (slug, course_key, name, class_date, start_time, end_time, price_cents, capacity, location, status) VALUES ('pcsl-nationals-prep-2026-10-31', 'pcsl-nationals-prep', 'Performance Rifle/Pistol: PCSL Nationals Prep (2-Day: Oct 31 – Nov 1)', '2026-10-31', '0900', '1600', 65000, 16, 'Private Range, Nuevo, CA', 'open');

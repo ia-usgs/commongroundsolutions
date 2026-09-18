@@ -44,6 +44,7 @@ type Props = {
   price: string;
   priceCents: number;
   courseKey?: string | null;
+  discountsDisabled?: boolean;
 };
 
 const EMPTY: SignupFormData = {
@@ -58,7 +59,7 @@ const EMPTY: SignupFormData = {
 type Step = "form" | "waiver" | "rifle_data" | "confirmation";
 const RIFLE_DATA_COURSE_KEYS = new Set(["scope-carbine-1"]);
 
-export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents, courseKey }: Props) => {
+export const SignupModal = ({ open, onOpenChange, classId, className, price, priceCents, courseKey, discountsDisabled = false }: Props) => {
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<SignupFormData>(EMPTY);
@@ -77,6 +78,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
 
   // Auto-detect returning customer on email blur (only when no manual code applied)
   const handleEmailBlur = async () => {
+    if (discountsDisabled) return;
     if (discountSource === "code") return;
     if (!form.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return;
     const isReturning = await checkReturningCustomer(form.email);
@@ -377,7 +379,8 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
                 </RadioGroup>
               </div>
 
-              {/* Promo code */}
+              {/* Promo code — hidden for courses that don't accept discounts */}
+              {!discountsDisabled && (
               <div>
                 <Label htmlFor="promo">Promo / Discount Code (optional)</Label>
                 {discount ? (
@@ -421,6 +424,7 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
                   .
                 </p>
               </div>
+              )}
 
               <div>
                 <Label htmlFor="notes">Notes (optional)</Label>

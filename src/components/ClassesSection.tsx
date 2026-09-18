@@ -20,7 +20,8 @@ const ClassesSection = () => {
     price: string;
     priceCents: number;
     courseKey: string | null;
-  }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null });
+    discountsDisabled: boolean;
+  }>({ open: false, classId: null, className: "", price: "", priceCents: 0, courseKey: null, discountsDisabled: false });
 
   const { getRemaining, getClassBySlug, getClassesByCourseKey } = useClassesAndSeats();
   const overrides = useCourseOverrides();
@@ -81,6 +82,7 @@ const ClassesSection = () => {
                 price: displayPrice,
                 priceCents: cls.price_cents ?? 0,
                 courseKey: course.courseKey,
+                discountsDisabled: course.discountsDisabled ?? false,
               });
             };
 
@@ -176,6 +178,7 @@ const ClassesSection = () => {
         price={modalState.price}
         priceCents={modalState.priceCents}
         courseKey={modalState.courseKey}
+        discountsDisabled={modalState.discountsDisabled}
       />
     </section>
   );
