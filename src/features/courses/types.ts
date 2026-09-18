@@ -9,7 +9,8 @@ export type CourseKey =
   | "defensive-pistol-tacmed"
   | "scope-carbine-1"
   | "scope-carbine-2"
-  | "cpr-aed-firstaid";
+  | "cpr-aed-firstaid"
+  | "pcsl-nationals-prep";
 
 
 export type Course = {
@@ -24,6 +25,8 @@ export type Course = {
   fallbackLocation?: string;
   /** When true, the course is shown as "Coming Soon" regardless of DB instances. */
   forceComingSoon?: boolean;
+  /** When true, promo codes and returning-customer discounts are not offered for this course. */
+  discountsDisabled?: boolean;
   description: string;
   /** First two entries render as paragraphs, middle entries render as bullets, last entry renders as a closing paragraph. */
   details: string[];
