@@ -6,6 +6,7 @@ export type ClassRow = {
   status: string; // 'open' | 'sold_out' | 'tba' | 'closed'
   capacity: number;
   class_date: string;
+  end_date: string | null; // Optional second/final day for multi-day classes
   price_cents: number;
   course_key: string | null;
   start_time: string | null;
