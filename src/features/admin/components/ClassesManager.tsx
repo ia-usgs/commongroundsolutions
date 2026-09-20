@@ -41,6 +41,7 @@ export const ClassesManager = ({ classes, signups, onChanged }: Props) => {
         course_key: courseKey,
         name: template?.name ?? courseLabel,
         class_date: TBA_DATE,
+        end_date: template?.end_date ?? null,
         start_time: template?.start_time ?? "0730",
         end_time: template?.end_time ?? "1330",
         price_cents: template?.price_cents ?? 0,
