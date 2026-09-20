@@ -51,6 +51,7 @@ export const ClassInstanceCard = ({ classRow, signups, onChanged }: Props) => {
     try {
       await updateClass(draft.id, {
         class_date: draft.class_date,
+        end_date: draft.end_date,
         start_time: draft.start_time,
         end_time: draft.end_time,
         price_cents: priceCents,
@@ -119,6 +120,38 @@ export const ClassInstanceCard = ({ classRow, signups, onChanged }: Props) => {
                 initialFocus
                 className={cn("p-3 pointer-events-auto")}
               />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div>
+          <Label className="text-xs">End date (multi-day, optional)</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !draft.end_date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {draft.end_date ? format(parseISO(draft.end_date), "PPP") : "None (single day)"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 z-50 bg-popover" align="start">
+              <div className="p-3 pointer-events-auto space-y-2">
+                <Calendar
+                  mode="single"
+                  selected={draft.end_date ? parseISO(draft.end_date) : undefined}
+                  onSelect={(d) => d && update("end_date", format(d, "yyyy-MM-dd"))}
+                  initialFocus
+                />
+                {draft.end_date && (
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => update("end_date", null)}>
+                    Clear end date
+                  </Button>
+                )}
+              </div>
             </PopoverContent>
           </Popover>
         </div>

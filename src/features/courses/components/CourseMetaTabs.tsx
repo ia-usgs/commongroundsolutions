@@ -1,7 +1,7 @@
 // Renders the row of meta "tabs" (date, time, price, level, location, seat count) shown
 // on each course card. Used by both ClassesSection and CertificationSection.
 import { Calendar, Clock, DollarSign, MapPin, Users } from "lucide-react";
-import { formatDateLabel, FAR_FUTURE_DATE } from "@/lib/format";
+import { formatDateLabel, formatDateRange, FAR_FUTURE_DATE } from "@/lib/format";
 import type { ClassRow } from "@/features/classes/types";
 
 export type CourseMetaTabsProps = {
@@ -54,7 +54,7 @@ export const CourseMetaTabs = ({
                   disabled={isSoldOut || i.status === "closed"}
                   className="bg-card text-foreground"
                 >
-                  {isTba ? "TBA" : formatDateLabel(i.class_date)}
+                  {isTba ? "TBA" : formatDateRange(i.class_date, i.end_date)}
                   {isSoldOut ? " — Sold Out" : ""}
                 </option>
               );
@@ -63,7 +63,8 @@ export const CourseMetaTabs = ({
         </span>
       ) : (
         <span className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1">
-          <Calendar size={14} /> {activeInstance ? formatDateLabel(activeInstance.class_date) : "TBA"}
+          <Calendar size={14} />{" "}
+          {activeInstance ? formatDateRange(activeInstance.class_date, activeInstance.end_date) : "TBA"}
         </span>
       )}
       <span className="flex items-center gap-1 bg-secondary text-secondary-foreground px-3 py-1">

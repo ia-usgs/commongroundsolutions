@@ -13,6 +13,28 @@ export const formatDateLabel = (iso: string | null | undefined): string => {
   }
 };
 
+// For multi-day classes: "Oct 31 – Nov 1". Falls back to the single-date label.
+export const formatDateRange = (
+  iso: string | null | undefined,
+  endDate: string | null | undefined
+): string => {
+  if (!endDate || endDate === FAR_FUTURE_DATE || endDate <= (iso ?? "")) {
+    return formatDateLabel(iso);
+  }
+  try {
+    const start = parseISO(iso!);
+    const end = parseISO(endDate);
+    // Same month/year: "Oct 31 – Nov 1" style is only needed across months;
+    // within a month show "Oct 31 – 31" never happens, so use "MMM d" both.
+    if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+      return `${format(start, "MMM d")} – ${format(end, "d")}`;
+    }
+    return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
+  } catch {
+    return formatDateLabel(iso);
+  }
+};
+
 export const formatPrice = (cents: number | null | undefined, fallback = "$0"): string => {
   if (cents == null) return fallback;
   const dollars = cents / 100;

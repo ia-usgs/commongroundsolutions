@@ -21,6 +21,7 @@ export type Database = {
           course_key: string | null
           created_at: string
           description: string | null
+          end_date: string | null
           end_time: string | null
           id: string
           level: string | null
@@ -38,6 +39,7 @@ export type Database = {
           course_key?: string | null
           created_at?: string
           description?: string | null
+          end_date?: string | null
           end_time?: string | null
           id?: string
           level?: string | null
@@ -55,6 +57,7 @@ export type Database = {
           course_key?: string | null
           created_at?: string
           description?: string | null
+          end_date?: string | null
           end_time?: string | null
           id?: string
           level?: string | null

@@ -21,7 +21,7 @@ export const fetchSeatCounts = async (): Promise<SeatCount[]> => {
 export type UpdateClassPatch = Partial<
   Pick<
     ClassRow,
-    "class_date" | "start_time" | "end_time" | "price_cents" | "capacity" | "status" | "location"
+    "class_date" | "end_date" | "start_time" | "end_time" | "price_cents" | "capacity" | "status" | "location"
   >
 >;
 
@@ -35,6 +35,7 @@ export type NewClassInput = {
   course_key: string;
   name: string;
   class_date: string;
+  end_date: string | null;
   start_time: string | null;
   end_time: string | null;
   price_cents: number;
