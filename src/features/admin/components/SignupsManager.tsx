@@ -116,6 +116,16 @@ export const SignupsManager = ({ signups, classes, onChanged }: Props) => {
                     >
                       {s.status}
                     </Badge>
+                    <div
+                      className="mt-1 text-[10px] text-muted-foreground"
+                      title={(s as any).notification_error ?? ""}
+                    >
+                      {(s as any).notification_sent === true
+                        ? "Email sent"
+                        : (s as any).notification_sent === false
+                        ? "Email FAILED"
+                        : "Email unknown"}
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     {s.status === "pending" && (
