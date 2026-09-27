@@ -20,7 +20,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PAYMENTS } from "@/config/payments";
 import { SITE } from "@/config/site";
 import { createSignup, generateReferenceCode } from "../api";
-import { supabase } from "@/integrations/supabase/client";
 import {
   applyDiscountToCents,
   checkReturningCustomer,
@@ -177,28 +176,10 @@ export const SignupModal = ({ open, onOpenChange, classId, className, price, pri
     body.append("signed_at", signedAtIso);
     body.append("message", `${priceSummary}\n\n${waiverText}`);
 
-    let sent = false;
-    let errorMsg: string | null = null;
-    for (let attempt = 0; attempt < 2 && !sent; attempt++) {
-      try {
-        if (attempt > 0) await new Promise((r) => setTimeout(r, 1500));
-        const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body });
-        const json = await res.json().catch(() => ({}));
-        if (res.ok && json?.success) sent = true;
-        else errorMsg = `HTTP ${res.status}: ${json?.message ?? "rejected"}`;
-      } catch (err: any) {
-        errorMsg = `Network/blocked: ${err?.message ?? String(err)}`;
-      }
-    }
-    if (!sent) console.error("Waiver email failed", errorMsg);
     try {
-      await supabase.rpc("record_signup_notification", {
-        _reference_code: reference_code,
-        _sent: sent,
-        _error: errorMsg,
-      });
+      await fetch("https://api.web3forms.com/submit", { method: "POST", body });
     } catch (err) {
-      console.error("Could not record email status", err);
+      console.error("Waiver email failed", err);
     }
   };
 

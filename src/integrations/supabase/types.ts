@@ -338,8 +338,6 @@ export type Database = {
           is_returning_customer: boolean
           last_name: string
           notes: string | null
-          notification_error: string | null
-          notification_sent: boolean | null
           original_price_cents: number | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           phone: string | null
@@ -369,8 +367,6 @@ export type Database = {
           is_returning_customer?: boolean
           last_name: string
           notes?: string | null
-          notification_error?: string | null
-          notification_sent?: boolean | null
           original_price_cents?: number | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           phone?: string | null
@@ -400,8 +396,6 @@ export type Database = {
           is_returning_customer?: boolean
           last_name?: string
           notes?: string | null
-          notification_error?: string | null
-          notification_sent?: boolean | null
           original_price_cents?: number | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           phone?: string | null
@@ -484,10 +478,6 @@ export type Database = {
           _reference_code: string
         }
         Returns: string
-      }
-      record_signup_notification: {
-        Args: { _error: string; _reference_code: string; _sent: boolean }
-        Returns: undefined
       }
       validate_discount_code: {
         Args: { _code: string }
