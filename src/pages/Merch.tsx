@@ -8,7 +8,7 @@ import { formatCents } from "@/features/signups/discounts";
 
 const TITLE = "CGS Merch | Common Ground Solutions Apparel";
 const DESCRIPTION =
-  "Shop Common Ground Solutions tees. Pre-order CGS apparel in sizes S-3XL, pick up in person or ship for $7. Pay by Zelle or Venmo.";
+  "Shop Common Ground Solutions tees. Pre-order CGS apparel in sizes S-3XL, pick up in person or ship for $10. Pay by Zelle or Venmo.";
 
 const Merch = () => {
   useEffect(() => {
