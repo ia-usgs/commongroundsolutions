@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 
-const SHIPPING_CENTS = 700;
+const SHIPPING_CENTS = 1000;
 
 const BodySchema = z.object({
   product_id: z.string().uuid(),
