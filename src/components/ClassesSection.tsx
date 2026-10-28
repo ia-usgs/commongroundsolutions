@@ -99,10 +99,21 @@ const ClassesSection = () => {
                     "relative h-48 sm:h-56 md:h-64 overflow-hidden",
                     course.imageFit === "object-contain" && "bg-black"
                   )}>
+                    {course.imageMobile && (
+                      <img
+                        src={course.imageMobile}
+                        alt={course.title}
+                        className={cn(
+                          "sm:hidden w-full h-full group-hover:scale-105 transition-transform duration-500",
+                          course.imageFit === "object-contain" ? "object-contain" : "object-cover"
+                        )}
+                      />
+                    )}
                     <img
                       src={course.image}
                       alt={course.title}
                       className={cn(
+                        course.imageMobile && "hidden sm:block",
                         "w-full h-full group-hover:scale-105 transition-transform duration-500",
                         course.imageFit === "object-contain" ? "object-contain" : "object-cover"
                       )}
