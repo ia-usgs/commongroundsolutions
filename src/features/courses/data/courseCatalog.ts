@@ -13,6 +13,7 @@ import classTacmed from "@/assets/class-tacmed.png";
 import cprFlyer from "@/assets/cpr-certification.png";
 import classPcslNationals from "@/assets/class-pcsl-nationals.png.asset.json";
 import classCloakDagger from "@/assets/class-cloak-dagger.png.asset.json";
+import classCloakDaggerBanner from "@/assets/class-cloak-dagger-banner.png";
 import type { Course, CourseKey } from "@/features/courses/types";
 
 const RENTAL_NOTE =
@@ -328,8 +329,7 @@ export const COURSE_CATALOG: Course[] = [
   {
     courseKey: "cloak-and-dagger",
     title: "Cloak and Dagger: Main Sanctuary Marksman",
-    image: classCloakDagger.url,
-    imageFit: "object-contain",
+    image: classCloakDaggerBanner,
     fallbackPrice: "$350",
     fallbackLevel: "Intermediate",
     fallbackTime: "9:00 AM–5:00 PM",
