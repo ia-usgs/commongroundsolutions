@@ -12,6 +12,7 @@ import classTacmed from "@/assets/class-tacmed.png";
 
 import cprFlyer from "@/assets/cpr-certification.png";
 import classPcslNationals from "@/assets/class-pcsl-nationals.png.asset.json";
+import classCloakDagger from "@/assets/class-cloak-dagger.png.asset.json";
 import type { Course, CourseKey } from "@/features/courses/types";
 
 const RENTAL_NOTE =
@@ -356,6 +357,7 @@ export const COURSE_GROUPS: { key: CourseKey; label: string }[] = [
   { key: "scope-carbine-1", label: "American Rifleman I" },
   { key: "scope-carbine-2", label: "American Rifleman II" },
   { key: "pcsl-nationals-prep", label: "Performance Rifle/Pistol: PCSL Nationals Prep" },
+  { key: "cloak-and-dagger", label: "Cloak and Dagger: Main Sanctuary Marksman" },
   { key: "cpr-aed-firstaid", label: "CPR / AED / First Aid" },
 
 ];
