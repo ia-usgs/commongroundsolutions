@@ -20,6 +20,8 @@ export type Course = {
   image: string;
   /** Tailwind object-fit class for the card image. */
   imageFit?: "object-cover" | "object-contain";
+  /** Optional narrower picture shown on phone-width cards so nothing important is cropped. */
+  imageMobile?: string;
   fallbackPrice: string;
   fallbackLevel: string;
   fallbackTime?: string;
