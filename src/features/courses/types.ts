@@ -10,7 +10,8 @@ export type CourseKey =
   | "scope-carbine-1"
   | "scope-carbine-2"
   | "cpr-aed-firstaid"
-  | "pcsl-nationals-prep";
+  | "pcsl-nationals-prep"
+  | "cloak-and-dagger";
 
 
 export type Course = {
